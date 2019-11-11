@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# Text Editor Configs
+*.vscode/
+
 # BlueJ files
 *.ctxt
 
