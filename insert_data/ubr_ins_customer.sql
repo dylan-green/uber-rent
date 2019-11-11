@@ -3,4 +3,4 @@ insert into customer values (5552331, 'Paul', '15 Abbey Road', 'London', 56731, 
 insert into customer values (5552511, 'Ringo', '251 Manchester Way', 'Liverpool', 85847, 0);
 insert into customer values (5551342, 'George', '8 Maxwell Drive', 'Sussex', 47292, 0);
 
-commit customer;
+commit;
