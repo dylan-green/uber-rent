@@ -12,7 +12,7 @@ From root you can run commands:
 
 	start create_tables/ubr_create_tables.sql;
 	start drop_tables/ubr_drop_tables.sql;
-	start insert_data/<coming soon>.sql;
+	start insert_data/populate.sql;
 
 To see what tables currently exist in the DB run
 SELECT table_name from user_tables;
