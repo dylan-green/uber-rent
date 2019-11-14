@@ -1,23 +1,24 @@
-create table customer (
-	customer_phone integer not null PRIMARY KEY,
-	customer_name varchar(20) not null,
-	customer_addr varchar(50) not null,
-    customer_city varchar(20) not null,
-	customer_dlnum integer not null,
-    member_points integer
+CREATE TABLE customer (
+	customer_phone INTEGER NOT NULL PRIMARY KEY,
+	customer_name VARCHAR(20) NOT NULL,
+	customer_addr VARCHAR(50) NOT NULL,
+    customer_city VARCHAR(20) NOT NULL,
+	customer_dlnum INTEGER NOT NULL,
+    is_club_member VARCHAR(1) DEFAULT 'F',
+    member_points INTEGER DEFAULT 0
 );
 
-create table rent (
-    rent_id integer not null PRIMARY KEY
+CREATE TABLE rent (
+    rent_id INTEGER NOT NULL PRIMARY KEY
 );
 
-create table rent_return (
-    return_id integer not null PRIMARY KEY,
-    return_date date not null,
-    return_time varchar(5) not null,
-    return_odometer integer not null,
-    return_value integer not null,
-    foreign key (return_id) references rent
+CREATE TABLE rent_return (
+    return_id INTEGER NOT NULL PRIMARY KEY,
+    return_date DATE NOT NULL,
+    return_time TIMESTAMP NOT NULL,
+    return_odometer INTEGER NOT NULL,
+    return_value INTEGER NOT NULL,
+    FOREIGN KEY (return_id) REFERENCES rent
 );
 
-commit;
+COMMIT;

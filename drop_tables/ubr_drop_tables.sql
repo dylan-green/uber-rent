@@ -1,5 +1,5 @@
-drop table customer;
-drop table rent cascade constraint;
-drop table rent_return;
+DROP TABLE customer;
+DROP TABLE rent CASCADE CONSTRAINT;
+DROP TABLE rent_return;
 
 commit;
