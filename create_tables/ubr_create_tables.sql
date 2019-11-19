@@ -1,5 +1,5 @@
 CREATE TABLE customer (
-	customer_phone INTEGER NOT NULL PRIMARY KEY,
+	cellphone INTEGER NOT NULL PRIMARY KEY,
 	customer_name VARCHAR(20) NOT NULL,
 	customer_addr VARCHAR(50) NOT NULL,
     customer_city VARCHAR(20) NOT NULL,
@@ -8,8 +8,70 @@ CREATE TABLE customer (
     member_points INTEGER DEFAULT 0
 );
 
+CREATE TABLE vehicletype (
+    vtname VARCHAR(20) NOT NULL PRIMARY KEY,
+    features VARCHAR(50),
+    week_rate INTEGER NOT NULL, /* weekly rate */
+    day_rate INTEGER NOT NULL, /* daily rate  */
+    hr_rate INTEGER NOT NULL, /* hourly rate */
+    week_irate INTEGER NOT NULL,
+    day_irate INTEGER NOT NULL,
+    hr_irate INTEGER NOT NULL,
+    krate INTEGER NOT NULL
+);
+
+/* FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES timeperiod */
+CREATE TABLE reservation (
+    confnum INTEGER NOT NULL PRIMARY KEY,
+    vtname VARCHAR(20) NOT NULL,
+    cellphone INTEGER NOT NULL,
+    fromDate DATE NOT NULL,
+    fromTime TIMESTAMP NOT NULL,
+    toDate DATE NOT NULL,
+    toTime TIMESTAMP NOT NULL,
+    FOREIGN KEY (vtname) REFERENCES vehicletype,
+    FOREIGN KEY (cellphone) REFERENCES customer
+);
+
+/* FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES timeperiod */
+/* FOREIGN KEY (vid) REFERENCES for_rent, */
 CREATE TABLE rent (
-    rent_id INTEGER NOT NULL PRIMARY KEY
+    rent_id INTEGER NOT NULL PRIMARY KEY,
+    vid INTEGER NOT NULL,
+    cellphone INTEGER NOT NULL,
+    fromDate DATE NOT NULL,
+    fromTime TIMESTAMP NOT NULL,
+    toDate DATE NOT NULL,
+    toTime TIMESTAMP NOT NULL,
+    odometer INTEGER NOT NULL,
+    cardName VARCHAR(20) NOT NULL,
+    cardNo INTEGER NOT NULL,
+    expDate INTEGER NOT NULL,
+    confnum INTEGER DEFAULT 0,
+    FOREIGN KEY (cellphone) REFERENCES customer,
+    FOREIGN KEY (confnum) REFERENCES reservation
+);
+
+CREATE TABLE branch (
+    b_location VARCHAR(20) NOT NULL,
+    city VARCHAR(15) NOT NULL,
+    PRIMARY KEY (b_location, city)
+);
+
+CREATE TABLE vehicle (
+    vid INTEGER NOT NULL PRIMARY KEY,
+    vlicense VARCHAR(6) NOT NULL,
+    make VARCHAR(10) NOT NULL,
+    model VARCHAR(10) NOT NULL,
+    year INTEGER NOT NULL,
+    color VARCHAR(10) NOT NULL,
+    odometer INTEGER NOT NULL,
+    /* vstatus, */
+    vtname VARCHAR(20) NOT NULL,
+    b_location VARCHAR(20) NOT NULL,
+    city VARCHAR(15) NOT NULL,
+    FOREIGN KEY (vtname) REFERENCES vehicletype, 
+    FOREIGN KEY (b_location, city) REFERENCES branch
 );
 
 CREATE TABLE rent_return (
