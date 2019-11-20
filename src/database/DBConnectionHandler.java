@@ -22,8 +22,4 @@ public class DBConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
     }
-
-    public static void main(String[] args) {
-        System.out.println("WE'RE ON IT!");
-    }
 }

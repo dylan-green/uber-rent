@@ -20,5 +20,7 @@ public class URent {
      * }
      */
 
-
+    public static void main(String[] args) {
+        System.out.println("WE ON ONE!");
+    }
 }
