@@ -31,40 +31,36 @@ public class Rent {
         this.confnum = confnum;
     }
 
-    public int getRentId() {
-        return this.rentID;
-    }
-
     public int getVid() {
         return this.vid;
     }
 
 	public int getRentID() {
-		return rentID;
+		return this.rentID;
 	}
 
 	public int getCellphone() {
-		return cellphone;
+		return this.cellphone;
 	}
 
 	public int getOdometer() {
-		return odometer;
+		return this.odometer;
 	}
 
 	public String getCardname() {
-		return cardname;
+		return this.cardname;
 	}
 
 	public long getCardnum() {
-		return cardnum;
+		return this.cardnum;
 	}
 
 	public int getExpdate() {
-		return expdate;
+		return this.expdate;
 	}
 
 	public int getConfnum() {
-		return confnum;
+		return this.confnum;
 	}
 
 }
