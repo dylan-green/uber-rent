@@ -10,7 +10,7 @@ CREATE TABLE customer (
 
 CREATE TABLE vehicletype (
     vtname VARCHAR(20) NOT NULL PRIMARY KEY,
-    features VARCHAR(50),
+    features VARCHAR(10),
     week_rate INTEGER NOT NULL, /* weekly rate */
     day_rate INTEGER NOT NULL, /* daily rate  */
     hr_rate INTEGER NOT NULL, /* hourly rate */
