@@ -22,7 +22,7 @@ INSERT INTO vehicle VALUES (12, "CCC555", "toyota", "yaris", 2019, "red", 7800, 
 INSERT INTO vehicle VALUES (13, "CCC666", "toyota", "camry", 2019, "blue", 4000, "available", "compact", "north", "vancouver");
 INSERT INTO vehicle VALUES (14, "CCC888", "toyota", "prius", 2019, "sliver", 2000, "available", "hybrid", "noth", "vancouver");
 INSERT INTO vehicle VALUES (15, "CCC999", "toyota", "sienna", 2019, "white", 8000, "available", "compact", "south", "vancouver");
-INSERT INTO vehicle VALUES (16, "CCC111", "toyota", "prius", 2019, "red", 10000, "available", "hybrid", "west", "vancouver");v
+INSERT INTO vehicle VALUES (16, "CCC111", "toyota", "prius", 2019, "red", 10000, "available", "hybrid", "west", "vancouver");
 INSERT INTO vehicle VALUES (17, "DDD111", "toyota", "avalon", 2019, "white", 12000, "available", "compact", "west", "vancouver");
 INSERT INTO vehicle VALUES (18, "EEE111", "toyota", "sienna", 2019, "sliver", 142000, "available", "suv", "west", "vancouver");
 
