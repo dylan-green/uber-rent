@@ -53,7 +53,7 @@ CREATE TABLE rent (
 );
 
 CREATE TABLE branch (
-    b_location VARCHAR(20) NOT NULL,
+    b_location VARCHAR(25) NOT NULL,
     city VARCHAR(15) NOT NULL,
     PRIMARY KEY (b_location, city)
 );
@@ -62,13 +62,13 @@ CREATE TABLE vehicle (
     vid INTEGER NOT NULL PRIMARY KEY,
     vlicense VARCHAR(6) NOT NULL,
     make VARCHAR(10) NOT NULL,
-    model VARCHAR(10) NOT NULL,
+    model VARCHAR(15) NOT NULL,
     year INTEGER NOT NULL,
     color VARCHAR(10) NOT NULL,
     odometer INTEGER NOT NULL,
     /* vstatus, */
     vtname VARCHAR(20) NOT NULL,
-    b_location VARCHAR(20) NOT NULL,
+    b_location VARCHAR(25) NOT NULL,
     city VARCHAR(15) NOT NULL,
     FOREIGN KEY (vtname) REFERENCES vehicletype, 
     FOREIGN KEY (b_location, city) REFERENCES branch

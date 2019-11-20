@@ -6,6 +6,7 @@ INSERT INTO branch VALUES ('2020 5th Avenue','New York');
 INSERT INTO branch VALUES ('775 Chipeta Drive','Ridgway');
 INSERT INTO branch VALUES ('3256 Wright Avenue','Boulder');
 INSERT INTO branch VALUES ('6520 Arabella Drive','Keystone');
+INSERT INTO branch VALUES ('5238 Somerville Street','Vancouver');
 
 
 /* Populate the Customer table */
@@ -61,6 +62,59 @@ INSERT INTO reservation VALUES(
     CURRENT_TIMESTAMP,
     TO_DATE('30/11/2019', 'DD/MM/YYYY'),
     CURRENT_TIMESTAMP
+);
+
+/* vstatus, */
+INSERT INTO vehicle VALUES (
+    102030405,
+    '989RNL',
+    'Mazda',
+    'Mazda3 Sport',
+    2012,
+    'white',
+    104000,
+    'Hatchback',
+    '5238 Somerville Street',
+    'Vancouver'
+);
+
+INSERT INTO vehicle VALUES (
+    111222345,
+    '844TYJ',
+    'Volkswagen',
+    'Jetta GTI',
+    2001,
+    'silver',
+    200000,
+    'Sedan',
+    '6520 Arabella Drive',
+    'Keystone'
+);
+
+INSERT INTO vehicle VALUES (
+    99999999,
+    '887BRO',
+    'Jeep',
+    'Liberty T',
+    2000,
+    'white',
+    220000,
+    'SUV',
+    '6520 Arabella Drive',
+    'Keystone'
+);
+
+INSERT INTO vehicle VALUES (
+    89898989,
+    'AXH29G',
+    'Nissan',
+    'X-Trail',
+    2004,
+    'tan',
+    400000,
+    'SUV',
+    '20 Sunset Boulevard',
+    'Los Angeles'
 );
 
 COMMIT;
