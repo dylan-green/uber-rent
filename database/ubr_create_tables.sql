@@ -69,7 +69,7 @@ CREATE TABLE rent (
     cardName VARCHAR(20) NOT NULL,
     cardNo INTEGER NOT NULL,
     expDate INTEGER NOT NULL,
-    confnum INTEGER DEFAULT 0,
+    confnum INTEGER,
     FOREIGN KEY (vid) REFERENCES vehicle,
     FOREIGN KEY (cust_dlnum) REFERENCES customer,
     FOREIGN KEY (confnum) REFERENCES reservation

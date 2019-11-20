@@ -7,6 +7,7 @@ INSERT INTO branch VALUES ('775 Chipeta Drive','Ridgway');
 INSERT INTO branch VALUES ('3256 Wright Avenue','Boulder');
 INSERT INTO branch VALUES ('6520 Arabella Drive','Keystone');
 INSERT INTO branch VALUES ('5238 Somerville Street','Vancouver');
+INSERT INTO branch VALUES ('77 Rokewood Avenue','Stellenbosch');
 
 
 /* Populate the Customer table */
@@ -119,6 +120,113 @@ INSERT INTO vehicle VALUES (
     'SUV',
     '20 Sunset Boulevard',
     'Los Angeles'
+);
+
+/* RENT */
+/* rent_id integer, vid integer, cell integer fromdate DATE */
+INSERT INTO rent VALUES (
+    1,
+    89898989,
+    5551234,
+    TO_DATE('1/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('3/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    2500,
+    'Dale Cooper',
+    19127,
+    0820,
+    111222
+);
+
+INSERT INTO rent VALUES (
+    2,
+    102030405,
+    5552331,
+    TO_DATE('5/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('9/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    1200,
+    'Laura Palmer',
+    19387,
+    0820,
+    222333
+);
+
+INSERT INTO rent VALUES (
+    3,
+    111222345,
+    5552511,
+    TO_DATE('10/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('12/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    10298,
+    'BOB',
+    79357,
+    0820,
+    111222
+);
+
+INSERT INTO rent VALUES (
+    4,
+    99999999,
+    5551342,
+    TO_DATE('14/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('19/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    7831,
+    'Gordon Cole',
+    13235,
+    0820,
+    NULL
+);
+
+INSERT INTO rent VALUES (
+    5,
+    89898989,
+    5550293,
+    TO_DATE('19/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('20/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    3219,
+    'Dougie Jones',
+    19352,
+    0820,
+    NULL
+);
+
+INSERT INTO rent VALUES (
+    6,
+    99999999,
+    5559705,
+    TO_DATE('25/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('28/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    37190,
+    'Janey-E Jones',
+    19357,
+    0820,
+    NULL
+);
+
+INSERT INTO rent VALUES (
+    7,
+    89898989,
+    0405932,
+    TO_DATE('28/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    TO_DATE('30/11/2019','DD/MM/YYYY'),
+    TO_TIMESTAMP( '23/12/2011 13:01', 'DD/MM/YYYY HH24:MI'),
+    90000,
+    'Shelly Johnson',
+    1235261782,
+    0820,
+    NULL
 );
 
 COMMIT;
