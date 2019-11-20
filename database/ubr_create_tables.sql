@@ -11,13 +11,13 @@ CREATE TABLE customer (
 CREATE TABLE vehicletype (
     vtname VARCHAR(20) NOT NULL PRIMARY KEY,
     features VARCHAR(10),
-    week_rate INTEGER NOT NULL, /* weekly rate */
-    day_rate INTEGER NOT NULL, /* daily rate  */
-    hr_rate INTEGER NOT NULL, /* hourly rate */
+    week_rate INTEGER NOT NULL,
+    day_rate INTEGER NOT NULL,
+    hr_rate INTEGER NOT NULL,
     week_irate INTEGER NOT NULL,
     day_irate INTEGER NOT NULL,
     hr_irate INTEGER NOT NULL,
-    krate INTEGER NOT NULL
+    km_rate INTEGER NOT NULL
 );
 
 /* FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES timeperiod */
