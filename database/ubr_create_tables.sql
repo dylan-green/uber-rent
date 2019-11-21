@@ -3,9 +3,7 @@ CREATE TABLE customer (
 	customer_name VARCHAR(20) NOT NULL,
 	customer_addr VARCHAR(50) NOT NULL,
     customer_city VARCHAR(20) NOT NULL,
-	cellphone INTEGER NOT NULL,
-    is_club_member VARCHAR(1) DEFAULT 'F',
-    member_points INTEGER DEFAULT 0
+	cellphone INTEGER NOT NULL
 );
 
 CREATE TABLE vehicletype (
