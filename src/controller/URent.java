@@ -21,6 +21,12 @@ public class URent {
      */
 
     public static void main(String[] args) {
-        System.out.println("WE ON ONE!");
+        URent rent = new URent();
+        if (rent.dbHandler.login()) {
+            rent.dbHandler.insertBranch("55 East 14th Ave", "Vancouver");
+            System.out.println("SUCCESS!");
+        } else {
+            System.out.println("FAILURE!");
+        }
     }
 }
