@@ -9,16 +9,9 @@ CREATE TABLE customer (
 CREATE TABLE vehicletype (
     vtname VARCHAR(20) NOT NULL PRIMARY KEY,
     features VARCHAR(10),
-    week_rate INTEGER NOT NULL,
-    day_rate INTEGER NOT NULL,
-    hr_rate INTEGER NOT NULL,
-    week_irate INTEGER NOT NULL,
-    day_irate INTEGER NOT NULL,
-    hr_irate INTEGER NOT NULL,
-    km_rate INTEGER NOT NULL
+    day_rate INTEGER NOT NULL
 );
 
-/* FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES timeperiod */
 CREATE TABLE reservation (
     confnum INTEGER NOT NULL PRIMARY KEY,
     vtname VARCHAR(20) NOT NULL,
@@ -53,16 +46,12 @@ CREATE TABLE vehicle (
     FOREIGN KEY (b_location, city) REFERENCES branch
 );
 
-/* FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES timeperiod */
-/* FOREIGN KEY (vid) REFERENCES for_rent, */
 CREATE TABLE rent (
     rent_id INTEGER NOT NULL PRIMARY KEY,
     vid INTEGER NOT NULL,
     cust_dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
-    fromTime TIMESTAMP NOT NULL,
-    toDate DATE NOT NULL,
-    toTime TIMESTAMP NOT NULL,
+    toDate DATE,
     odometer INTEGER NOT NULL,
     cardName VARCHAR(20) NOT NULL,
     cardNo INTEGER NOT NULL,
@@ -76,8 +65,6 @@ CREATE TABLE rent (
 CREATE TABLE rent_return (
     return_id INTEGER NOT NULL PRIMARY KEY,
     return_date DATE NOT NULL,
-    return_time TIMESTAMP NOT NULL,
-    return_odometer INTEGER NOT NULL,
     return_value INTEGER NOT NULL,
     FOREIGN KEY (return_id) REFERENCES rent
 );
