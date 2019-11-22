@@ -4,17 +4,18 @@ import java.sql.Date;
 
 public class ReturnModel {
     private final int returnId;
-    private final long value;
     private final int rate;
     private final Date from;
     private final Date to;
     private long days;
+    private long value;
     
     public ReturnModel(int returnId, Date from, Date to, int rate) {
         this.returnId = returnId;
-        this.from = to;
+        this.from = from;
         this.to = to;
         this.rate = rate;
+        this.days = calculateDays();
         this.value = calculateValue();
     }
 
@@ -37,11 +38,12 @@ public class ReturnModel {
     public long getDays() {
         return days;
     }
+
+    private long calculateDays() {
+        return ((this.to.getTime() - this.from.getTime()) / (24 * 60 * 60 * 1000));
+    }
     
     private long calculateValue() {
-        System.out.println("FROM: " + from);
-        System.out.println("TO: " + to);
-        this.days = ((to.getTime() - from.getTime()) / (24 * 60 * 60 * 1000));
         return this.days * this.rate;
     }
 }

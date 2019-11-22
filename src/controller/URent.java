@@ -25,7 +25,7 @@ public class URent {
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
-            rent.dbHandler.returnRental(5);
+            rent.dbHandler.returnRental(3);
         } else {
             System.out.println("FAILURE!");
         }

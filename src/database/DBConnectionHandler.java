@@ -77,6 +77,7 @@ public class DBConnectionHandler {
 			rs.next();
 			Date from = rs.getDate("fromdate");
 			Date to = new Date(System.currentTimeMillis());
+
 			int rate = rs.getInt("day_rate");
 			int confnum = rs.getInt("confnum");
 			ReturnModel ret = new ReturnModel(rentId, from, to, rate);
@@ -98,8 +99,8 @@ public class DBConnectionHandler {
 				receipt.append("	RESERVATION: " + confnum + "\n");
 			}
 			receipt.append("	DATE: " + to + "\n");
-			receipt.append("	" + ret.getDays() + " DAYS * " + "$" + rate + ".00 PER DAY" + "\n");
-			receipt.append("	TOTAL: " + ret.getValue() + "\n");
+			receipt.append("	" + ret.getDays() + " DAYS * $" + rate + ".00 PER DAY\n");
+			receipt.append("	TOTAL: $" + ret.getValue() + ".00\n");
 
 			System.out.print(receipt.toString());
 
