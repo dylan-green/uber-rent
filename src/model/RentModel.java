@@ -3,82 +3,73 @@ package model;
 import java.sql.Date;
 
 public class RentModel {
-    private static int rentIdCounter = 101;
-
-    private final int rentId;
     private final int vid;
-    private final int dlnum;
-    private final Date fromDate;
-    private Date toDate;
+	private final int dlnum;
+    private 	  Date to;
+    private final Date from;
     private final int odometer;
     private final String cardname;
     private final int cardNo;
-    private final int expDate;
-    private final int confnum;
+	private final int expDate;
+	private final int rentId;
 
     public RentModel(
         int vid,
         int dlnum,
-        Date fromDate,
+        Date from,
         int odometer,
         String cardname,
         int cardNo,
         int expDate
         ) {
-        this.rentId = rentIdCounter++;
         this.vid = vid;
         this.dlnum = dlnum;
-        this.fromDate = fromDate;
-        this.toDate = null;
+		this.to = null;
+		this.from = from;
         this.odometer = odometer;
         this.cardname = cardname;
         this.cardNo = cardNo;
-        this.expDate = expDate;
-        this.confnum = (int)Math.random() % 1000000;
+		this.expDate = expDate;
+		this.rentId = dlnum;
     }
 
 	public int getRentId() {
-		return rentId;
+		return this.rentId;
 	}
 
 	public int getVid() {
-		return vid;
+		return this.vid;
 	}
 
 	public int getDlnum() {
-		return dlnum;
+		return this.dlnum;
 	}
 
 	public Date getFromDate() {
-		return fromDate;
+		return this.from;
 	}
 
 	public Date getToDate() {
-		return toDate;
+		return this.to;
 	}
 
-	public void setToDate(Date toDate) {
-		this.toDate = toDate;
+	public void setToDate(Date date) {
+		this.to = date;
 	}
 
 	public int getOdometer() {
-		return odometer;
+		return this.odometer;
 	}
 
 	public String getCardname() {
-		return cardname;
+		return this.cardname;
 	}
 
 	public int getCardNo() {
-		return cardNo;
+		return this.cardNo;
 	}
 
 	public int getExpDate() {
-		return expDate;
+		return this.expDate;
 	}
-
-	public int getConfnum() {
-		return confnum;
-	}
-
 }

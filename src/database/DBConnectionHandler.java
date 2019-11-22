@@ -63,25 +63,72 @@ public class DBConnectionHandler {
 		}
 	}
 
-	public void rentVehicle(int confnum /*, String cardname, int cardNo, int expDate*/) {
+	public void rentWithoutReservation(
+			String cardname,
+			int cardNo,
+			int expDate,
+			String vtname,
+			int dlnum) {
 		try {
-			if (confnum != 0) {
-				String query = 
-				"SELECT vid, dlnum, fromDate, odometer " +  
-				"FROM reservation r, vehicle v " +
-				"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=" + confnum;
+			String query = 
+			"SELECT vid, odometer " +
+			"FROM vehicle v " +
+			"WHERE v.vstatus='A' AND v.vtname=" + vtname;
 			
-				Statement stmt = connection.createStatement();
-				ResultSet rs = stmt.executeQuery(query);
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
 
-				if (!rs.next()) {
-					throw new SQLException("No available vehicles found.");
-				}
-
-				stmt.close();
-			} else {
-				
+			if (!rs.next()) {
+				throw new SQLException("No available vehicles found.");
 			}
+				
+			System.out.println(query);
+
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void rentWithReservation(int confnum, String cardname, int cardNo, int expDate) {
+		try {
+			String query = 
+			"SELECT vid, dlnum, fromDate, odometer " +  
+			"FROM reservation r, vehicle v " +
+			"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=" + confnum;
+			
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (!rs.next()) {
+				throw new SQLException("No available vehicles found.");
+			}
+
+			int vid = rs.getInt("vid");
+			int dlnum = rs.getInt("dlnum");
+			Date from = rs.getDate("fromdate");
+			int odometer = rs.getInt("odometer");
+			RentModel rent = 
+					new RentModel(vid, dlnum, from, odometer, cardname, cardNo, expDate);
+			
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO rent VALUES (?,?,?,?,?,?,?,?,?,?)");
+			ps.setInt(1, rent.getRentId());
+			
+			ps.setInt(2, vid);
+			ps.setInt(3, dlnum);
+			ps.setDate(4, from);
+			ps.setDate(5, null);
+			ps.setInt(6, odometer);
+			ps.setString(7, cardname);
+			ps.setInt(8, cardNo);
+			ps.setInt(9, expDate);
+			ps.setInt(10, confnum);
+
+			ps.executeUpdate();
+			connection.commit();
+
+			stmt.close();
+
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();

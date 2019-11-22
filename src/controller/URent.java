@@ -18,7 +18,7 @@ public class URent {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
             /* Test your transactions here */
-            rent.dbHandler.rentVehicle(123456);
+            rent.dbHandler.rentWithReservation(111222, "Dylan Green", 99887766, 1201);
         } else {
             System.out.println("FAILURE!");
         }
