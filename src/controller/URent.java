@@ -21,6 +21,21 @@ public class URent {
      */
 
     public static void main(String[] args) {
-        System.out.println("WE ON ONE!");
+        URent urent = new URent();
+        urent.dbHandler.connect();
+        urent.dbHandler.generateReport("2/11/2019");
+        urent.dbHandler.generateReportByBranch("6520 Arabella Drive");
     }
+
+    /** generates report **/
+//    public void generateReport() {
+//       dbHandler.generateReport();
+//    }
+
+    /** generates report for branch **/
+//    public void generateReportForBranch(string branch) {
+//        dbHandler.generateReportForBranch(branch);
+//    }
+
+
 }
