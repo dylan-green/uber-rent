@@ -15,13 +15,11 @@ CREATE TABLE vehicletype (
 CREATE TABLE reservation (
     confnum INTEGER NOT NULL PRIMARY KEY,
     vtname VARCHAR(20) NOT NULL,
-    cust_dlnum INTEGER NOT NULL,
+    dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
-    fromTime TIMESTAMP NOT NULL,
     toDate DATE NOT NULL,
-    toTime TIMESTAMP NOT NULL,
     FOREIGN KEY (vtname) REFERENCES vehicletype,
-    FOREIGN KEY (cust_dlnum) REFERENCES customer
+    FOREIGN KEY (dlnum) REFERENCES customer
 );
 
 CREATE TABLE branch (

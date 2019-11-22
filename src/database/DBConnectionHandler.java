@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
-import java.util.Calendar;
 import java.util.ArrayList;
-import java.time.temporal.ChronoUnit;
 
 import model.ReturnModel;
 import model.RentModel;
@@ -65,16 +63,50 @@ public class DBConnectionHandler {
 		}
 	}
 
+	public void rentVehicle(int confnum /*, String cardname, int cardNo, int expDate*/) {
+		try {
+			if (confnum != 0) {
+				String query = 
+				"SELECT vid, dlnum, fromDate, odometer " +  
+				"FROM reservation r, vehicle v " +
+				"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=" + confnum;
+			
+				Statement stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(query);
+
+				if (!rs.next()) {
+					throw new SQLException("No available vehicles found.");
+				}
+
+				System.out.println(rs.getInt("vid"));
+				System.out.println(rs.getInt("dlnum"));
+				System.out.println(rs.getDate("fromdate"));
+				System.out.println(rs.getInt("odometer"));
+
+				stmt.close();
+			} else {
+
+			}
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
 	public void returnRental(int rentId) {
 		try {
 			String query = 
 			"SELECT fromdate, confnum, day_rate "+ 
 			"FROM rent r, vehicle v, vehicletype vt "+ 
 			"WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=" + rentId;
+			
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
+ 
+			if (!rs.next()) {
+				throw new SQLException("No rental found with ID " + rentId);
+			}
 
-			rs.next();
 			Date from = rs.getDate("fromdate");
 			Date to = new Date(System.currentTimeMillis());
 
@@ -105,7 +137,6 @@ public class DBConnectionHandler {
 			System.out.print(receipt.toString());
 
 		} catch (SQLException e) {
-			// System.out.println("Could not find a rental with ID: " + rentId);
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}

@@ -3,7 +3,7 @@ package model;
 import java.sql.Date;
 
 public class RentModel {
-    private static int rentIdCounter = 1;
+    private static int rentIdCounter = 101;
 
     private final int rentId;
     private final int vid;
