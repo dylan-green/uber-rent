@@ -78,14 +78,9 @@ public class DBConnectionHandler {
 					throw new SQLException("No available vehicles found.");
 				}
 
-				System.out.println(rs.getInt("vid"));
-				System.out.println(rs.getInt("dlnum"));
-				System.out.println(rs.getDate("fromdate"));
-				System.out.println(rs.getInt("odometer"));
-
 				stmt.close();
 			} else {
-
+				
 			}
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
