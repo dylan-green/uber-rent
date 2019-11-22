@@ -10,20 +10,14 @@ public class URent {
         System.out.println(dbHandler);
     }
 
-    /**
-     * Here we add transactions to URent and 
-     * their corresponding database actions
-     * --------------------------------------
-     * 
-     * public void insertBranch(BranchModel model) {
-     *      dbHandler.insertBranch(model);
-     * }
-     */
+    public void returnRental(int rentId) {
+        dbHandler.returnRental(rentId);
+    }
 
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
-            rent.dbHandler.returnRental(3);
+            /* Test your transactions here */
         } else {
             System.out.println("FAILURE!");
         }
