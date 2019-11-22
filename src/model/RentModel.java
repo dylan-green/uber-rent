@@ -25,7 +25,7 @@ public class RentModel {
         int cardNo,
         int expDate
         ) {
-        this.rentId = rentIdCounter;
+        this.rentId = rentIdCounter++;
         this.vid = vid;
         this.dlnum = dlnum;
         this.fromDate = fromDate;
@@ -35,7 +35,6 @@ public class RentModel {
         this.cardNo = cardNo;
         this.expDate = expDate;
         this.confnum = (int)Math.random() % 1000000;
-        rentIdCounter++;
     }
 
 	public int getRentId() {

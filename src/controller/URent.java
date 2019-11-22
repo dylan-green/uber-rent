@@ -1,7 +1,5 @@
 package controller;
 
-import java.sql.Date;
-
 import database.DBConnectionHandler;
 
 public class URent {
