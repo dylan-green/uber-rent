@@ -2,6 +2,7 @@ package database;
 
 import model.Report;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.HashMap;
 
@@ -30,55 +31,90 @@ public class DBConnectionHandler {
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
-    		System.out.println("wrong");
+    		System.out.println(e);
     		return false;
 		}
 	}
 
 	/** Generates Daily Report (for all branches) **/
-	public void generateReport(String date) {
+	public Report generateReport(String date) {
             try {
-                Statement statement = connection.createStatement();
-				Statement statement2 = connection.createStatement();
-				Statement statement3 = connection.createStatement();
-				Statement statement4 = connection.createStatement();
 
-				//TODO: use variable date for these
-                ResultSet branchResults = statement.executeQuery("select v.b_location as branch, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') group by v.b_location;");
-                ResultSet branchAndTypeResults = statement2.executeQuery("select v.b_location as branch, v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') group by v.b_location, v.vtname;");
-                ResultSet totalRentals = statement3.executeQuery("select COUNT(*) as count from rent");
-                ResultSet vehicleDetails = statement4.executeQuery("select v.b_location as branch, v.make, v.model, v.color, v.year from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY')");
+            	// Create statements for all SQL Queries
+				Statement byBranchStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
+				Statement byBranchCarStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
+				Statement vehicleDeetsStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
+				Statement countTotalStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
 
-				HashMap branchData = new HashMap();
-				HashMap branchTypeData = new HashMap();
-				int rentalCount = 0;
+				// Processing for Report of Number of Rentals by Branch
 
-				//TODO instantiate Report object with resultant tables instead, move processing somewhere else, whereever report will be rendered
+				// Processing for Report of Number Of Rentals by Branch and Car Type
+				ResultSet branchCarRes = byBranchCarStm.executeQuery("select v.b_location as branch, v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') group by v.b_location, v.vtname");
+				String branchCarResColumn[] = {"Branch", "Car Type", "Number of Rentals"};
+				String branchCarResData[][] = new String[getRowCount(branchCarRes)][3];
 
-				while (totalRentals.next()) {
-					rentalCount = totalRentals.getInt("count");
-					System.out.print(rentalCount);
-				}
-
-				while(branchResults.next()){
-					String id  = branchResults.getString("branch");
-					int numberOfRentals = branchResults.getInt("numberOfRentals");
-					branchData.put(id, numberOfRentals);
-				}
-
-				while(branchAndTypeResults.next()) {
-					String branch = branchAndTypeResults.getString("branch");
-					String cartype = branchAndTypeResults.getString("carType");
+				int i = 0;
+				while(branchCarRes.next()) {
+					String branch = branchCarRes.getString("branch");
+					String cartype = branchCarRes.getString("carType");
 					String key = branch + "-" + cartype;
-					int numberOfRentals = branchAndTypeResults.getInt("numberOfRentals");
-					branchTypeData.put(key, numberOfRentals);
+					int numberOfRentals = branchCarRes.getInt("numberOfRentals");
+					branchCarResData[i][0] = branch;
+					branchCarResData[i][1] = cartype;
+					branchCarResData[i][2] = String.valueOf(numberOfRentals);
+					i++;
 				}
-////				Report dailyReport = new Report(branchData, rentalCount, branchTypeData);
-//				System.out.print(dailyReport);
-            } catch (SQLException e) {
-                System.out.println(e);
-            }
-    }
+
+				JTable jt = new JTable(branchCarResData, branchCarResColumn);
+				jt.setBounds(30, 40, 200, 300);
+
+				//Processing for Vehicle Details
+
+
+
+				//Processing for Total Number of Rentals
+
+
+
+				// create Report object to hold all the tables, and data
+				Report report = new Report(jt);
+				return report;
+			} catch (SQLException e) {
+				System.out.println(e);
+			}
+		return null;
+	}
+
+	private int getRowCount(ResultSet rs) throws SQLException {
+		int rowCount = 0;
+		rs.last();
+		rowCount = rs.getRow();
+		rs.beforeFirst();
+		return rowCount;
+	}
+
+	private Report generateBranchAndCarType() {
+		try {
+			Statement statement2 = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+
+		} catch (SQLException e) {
+
+		}
+		return null;
+	}
+
+	private void generateByBranch() {
+
+	}
+
+	private int getTotalRentals() {
+		return 0;
+	}
 
     public void generateReportByBranch(String branch) {
 		try {

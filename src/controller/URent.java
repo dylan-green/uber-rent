@@ -1,6 +1,8 @@
 package controller;
 
 import database.DBConnectionHandler;
+import model.Report;
+import ui.ReportUI;
 
 public class URent {
     private DBConnectionHandler dbHandler = null;
@@ -23,8 +25,10 @@ public class URent {
     public static void main(String[] args) {
         URent urent = new URent();
         urent.dbHandler.connect();
-        urent.dbHandler.generateReport("2/11/2019");
-        urent.dbHandler.generateReportByBranch("6520 Arabella Drive");
+        Report report = urent.dbHandler.generateReport("2/11/2019");
+        ReportUI reportUI = new ReportUI(report);
+
+//        urent.dbHandler.generateReportByBranch("6520 Arabella Drive");
     }
 
     /** generates report **/
