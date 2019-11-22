@@ -1,5 +1,7 @@
 package controller;
 
+import java.sql.Date;
+
 import database.DBConnectionHandler;
 
 public class URent {
@@ -23,8 +25,7 @@ public class URent {
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
-            rent.dbHandler.insertBranch("55 East 14th Ave", "Vancouver");
-            System.out.println("SUCCESS!");
+            rent.dbHandler.returnRental(5);
         } else {
             System.out.println("FAILURE!");
         }
