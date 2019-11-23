@@ -35,6 +35,7 @@ INSERT INTO vehicletype VALUES('Hybrid',NULL,400);
 INSERT INTO vehicletype VALUES('Convertible',NULL,550);
 INSERT INTO vehicletype VALUES('SUV',NULL,550);
 
+<<<<<<< HEAD
 INSERT INTO reservation 
 VALUES(111222,'SUV',5551234,TO_DATE('19/11/2019','DD/MM/YYYY'),TO_DATE('30/11/2019','DD/MM/YYYY'));
 
@@ -46,6 +47,31 @@ VALUES(333444,'Sedan',5550293,TO_DATE('19/11/2019','DD/MM/YYYY'),TO_DATE('30/11/
 
 INSERT INTO reservation 
 VALUES(123456,'Hybrid',2817594,TO_DATE('10/11/2019','DD/MM/YYYY'),TO_DATE('20/11/2019','DD/MM/YYYY'));
+=======
+INSERT INTO reservation VALUES(
+    111222,
+    'Hybrid',
+    5551234,
+    TO_DATE('19/11/2019','DD/MM/YYYY'),
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
+);
+
+INSERT INTO reservation VALUES(
+    222333,
+    'Truck',
+    5552511,
+    TO_DATE('19/11/2019','DD/MM/YYYY'),
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
+);
+
+INSERT INTO reservation VALUES(
+    333444,
+    'Sedan',
+    5550293,
+    TO_DATE('19/11/2019','DD/MM/YYYY'),
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
+);
+>>>>>>> 053281fac02fb7e95a5488b92e6ae21989551e5b
 
 INSERT INTO vehicle VALUES (
     384957,
@@ -54,7 +80,6 @@ INSERT INTO vehicle VALUES (
     'Mazda3 Sport',
     2012,
     'white',
-    104000,
     'A',
     'Hatchback',
     '5238 Somerville Street',
@@ -68,7 +93,6 @@ INSERT INTO vehicle VALUES (
     'Jetta GTI',
     2001,
     'silver',
-    200000,
     'A',
     'Sedan',
     '6520 Arabella Drive',
@@ -82,7 +106,6 @@ INSERT INTO vehicle VALUES (
     'Liberty T',
     2000,
     'white',
-    220000,
     'A',
     'SUV',
     '6520 Arabella Drive',
@@ -96,13 +119,27 @@ INSERT INTO vehicle VALUES (
     'X-Trail',
     2004,
     'tan',
-    400000,
     'A',
     'SUV',
     '20 Sunset Boulevard',
     'Los Angeles'
 );
 
+INSERT INTO vehicle VALUES (
+    9999999,
+    'AXH29G',
+    'Nissan',
+    'X-Trail',
+    2004,
+    'tan',
+    'N',
+    'Convertible',
+    '20 Sunset Boulevard',
+    'Los Angeles'
+);
+
+/* RENT */
+/* rent_id integer, vid integer, cell integer fromdate DATE */
 INSERT INTO rent VALUES (
     1,
     593028,

@@ -35,7 +35,6 @@ CREATE TABLE vehicle (
     model VARCHAR(15) NOT NULL,
     year INTEGER NOT NULL,
     color VARCHAR(10) NOT NULL,
-    odometer INTEGER NOT NULL,
     vstatus VARCHAR(1) DEFAULT 'A',
     vtname VARCHAR(20) NOT NULL,
     b_location VARCHAR(25) NOT NULL,
