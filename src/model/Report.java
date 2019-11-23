@@ -3,30 +3,30 @@ package model;
 import javax.swing.*;
 
 public class Report {
-    private final JTable branchByCarTypeTable;
-    private final JTable branchTable;
+    private final JTable byCarTypeTable;
+    private final JTable byBranchTable;
     private final JTable vehicleDetails;
-    private final String totalNumRentals;
+    private final String total;
     public Report(JTable branchCarTypeTable, JTable branchTable, JTable vTable, String numRentals) {
-        this.branchByCarTypeTable = branchCarTypeTable;
-        this.branchTable = branchTable;
+        this.byCarTypeTable = branchCarTypeTable;
+        this.byBranchTable = branchTable;
         this.vehicleDetails = vTable;
-        this.totalNumRentals = numRentals;
+        this.total = numRentals;
     }
 
-    public JTable getBranchAndCarTable() {
-        return this.branchByCarTypeTable;
+    public JTable getByCarTypeTable() {
+        return this.byCarTypeTable;
     }
 
-    public JTable getBranchTable() {
-        return this.branchTable;
+    public JTable getByBranchTable() {
+        return this.byBranchTable;
     }
 
     public JTable getVTable() {
         return this.vehicleDetails;
     }
 
-    public String getTotalNumRentals() {
-        return this.totalNumRentals;
+    public String getTotal() {
+        return this.total;
     }
 }

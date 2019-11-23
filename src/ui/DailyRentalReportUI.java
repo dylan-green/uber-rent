@@ -22,12 +22,12 @@ public class DailyRentalReportUI {
     };
 
     public DailyRentalReportUI(Report report) {
-        if (report.getBranchAndCarTable() != null) {
-            tabbedPane.addTab("Branch and Car Type", new JScrollPane(report.getBranchAndCarTable()));
+        if (report.getByCarTypeTable() != null) {
+            tabbedPane.addTab("Branch and Car Type", new JScrollPane(report.getByCarTypeTable()));
         }
-        tabbedPane.addTab("Branch", new JScrollPane(report.getBranchTable()));
+        tabbedPane.addTab("Branch", new JScrollPane(report.getByBranchTable()));
         tabbedPane.addTab("Vehicle Details", new JScrollPane(report.getVTable()));
-        tabbedPane.addTab("Total Number of Rentals", new JScrollPane(new JLabel(report.getTotalNumRentals())));
+        tabbedPane.addTab("Total Number of Rentals", new JScrollPane(new JLabel(report.getTotal()))); //TODO dynamically change tab name
         tabbedPane.setTabPlacement(JTabbedPane.TOP);
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
