@@ -16,17 +16,24 @@ public class URent {
         dbHandler.returnRental(rentId);
     }
 
+    public void generateDailyReport() {
+        Report report = dbHandler.generateReport("2/11/2019");
+        DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+    }
+
+    public void generateDailyReportSingleBranch() {
+        Report branchReport = dbHandler.generateReportByBranch("6520 Arabella Drive");
+        DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
+    }
+
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
             /* Test your transactions here */
+            rent.generateDailyReport();
+            rent.generateDailyReportSingleBranch();
         } else {
             System.out.println("FAILURE!");
         }
-        rent.dbHandler.connect();
-        Report report = rent.dbHandler.generateReport("2/11/2019");
-        DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
-        Report branchReport = rent.dbHandler.generateReportByBranch("6520 Arabella Drive");
-        DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
     }
 }

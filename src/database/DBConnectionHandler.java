@@ -122,27 +122,13 @@ public class DBConnectionHandler {
 				connection.close();
 			}
 
-			connection = DriverManager.getConnection(ORACLE_URL, "ora_gdylan", "a52143104");
+			connection = DriverManager.getConnection(ORACLE_URL, "ora_ahkiho", "a37653128");
 			connection.setAutoCommit(false);
 
 			return true;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			return false;
-		}
-	}
-    }
-
-    public boolean connect() {
-    	try {
-			connection = DriverManager.getConnection(ORACLE_URL, "ora_ahkiho", "a37653128");
-			connection.setAutoCommit(false);
-
-			System.out.println("\nConnected to Oracle!");
-			return true;
-		} catch (SQLException e) {
-    		System.out.println(e);
-    		return false;
 		}
 	}
 
