@@ -220,20 +220,20 @@ INSERT INTO rent VALUES (
 
 -- -- /* addition to populate * /
 -- -- /* add more vehicles (toyotas) */
-INSERT INTO vehicle VALUES (11111113, 'AAA333', 'toyota', 'camry', 2019, 'sliver', 10000, 'A', 'Convertible', '5238 Somerville Street', 'Vancouver');
-INSERT INTO vehicle VALUES (11111114, 'AAA444', 'toyota', 'prius', 2019, 'black', 10000, 'A', 'Hybrid', '6520 Arabella Drive', 'Keystone');
-INSERT INTO vehicle VALUES (11111115, 'AAA555', 'toyota', 'sienna', 2019, 'white', 15000, 'A', 'SUV', '3256 Wright Avenue', 'Boulder');
-INSERT INTO vehicle VALUES (11111116, 'AAA666', 'toyota', 'avalon', 2019, 'white', 1500, 'A', 'Hatchback', '5238 Somerville Street', 'Vancouver');
-INSERT INTO vehicle VALUES (11111117, 'AAA888', 'toyota', 'yaris', 2019, 'blue', 4000, 'A', 'Hatchback', '6520 Arabella Drive', 'Keystone');
-INSERT INTO vehicle VALUES (11111118, 'AAA999', 'toyota', 'camry', 2019, 'black', 12000, 'A', 'Hatchback', '2020 5th Avenue', 'New York');
-INSERT INTO vehicle VALUES (11111119, 'BBB111', 'toyota', 'prius', 2019, 'black', 80000, 'A', 'Hybrid', '3256 Wright Avenue', 'Boulder');
-INSERT INTO vehicle VALUES (11111110, 'BBB222', 'toyota', 'yaris', 2019, 'blue', 12000, 'A', 'Convertible', '3256 Wright Avenue', 'Boulder');
-INSERT INTO vehicle VALUES (11111121, 'BBB333', 'toyota', 'yaris', 2019,'white', 12000, 'A', 'Convertible', '2020 5th Avenue', 'New York');
-INSERT INTO vehicle VALUES (11111122, 'CCC555', 'toyota', 'yaris', 2019, 'red', 7800, 'A', 'Convertible', '3256 Wright Avenue', 'Boulder');
-INSERT INTO vehicle VALUES (11111123, 'CCC666', 'toyota', 'camry', 2019, 'blue', 4000, 'A', 'Convertible', '5238 Somerville Street', 'Vancouver');
-INSERT INTO vehicle VALUES (11111124, 'CCC888', 'toyota', 'prius', 2019, 'sliver', 2000, 'A', 'Hybrid', '2020 5th Avenue', 'New York');
-INSERT INTO vehicle VALUES (11111125, 'CCC999', 'toyota', 'sienna', 2019, 'white', 8000, 'A', 'Convertible', '2020 5th Avenue', 'New York');
-INSERT INTO vehicle VALUES (11111126, 'CCC111', 'toyota', 'prius', 2019, 'red', 10000, 'A', 'Hybrid', '6520 Arabella Drive', 'Keystone');
+INSERT INTO vehicle VALUES (11111113, 'AAA333', 'toyota', 'camry', 2019, 'sliver', 'A', 'Convertible', '5238 Somerville Street', 'Vancouver');
+INSERT INTO vehicle VALUES (11111114, 'AAA444', 'toyota', 'prius', 2019, 'black', 'A', 'Hybrid', '6520 Arabella Drive', 'Keystone');
+INSERT INTO vehicle VALUES (11111115, 'AAA555', 'toyota', 'sienna', 2019, 'white', 'A', 'SUV', '3256 Wright Avenue', 'Boulder');
+INSERT INTO vehicle VALUES (11111116, 'AAA666', 'toyota', 'avalon', 2019, 'white', 'A', 'Hatchback', '5238 Somerville Street', 'Vancouver');
+INSERT INTO vehicle VALUES (11111117, 'AAA888', 'toyota', 'yaris', 2019, 'blue', 'A', 'Hatchback', '6520 Arabella Drive', 'Keystone');
+INSERT INTO vehicle VALUES (11111118, 'AAA999', 'toyota', 'camry', 2019, 'black', 'A', 'Hatchback', '2020 5th Avenue', 'New York');
+INSERT INTO vehicle VALUES (11111119, 'BBB111', 'toyota', 'prius', 2019, 'black', 'A', 'Hybrid', '3256 Wright Avenue', 'Boulder');
+INSERT INTO vehicle VALUES (11111110, 'BBB222', 'toyota', 'yaris', 2019, 'blue', 'A', 'Convertible', '3256 Wright Avenue', 'Boulder');
+INSERT INTO vehicle VALUES (11111121, 'BBB333', 'toyota', 'yaris', 2019,'white', 'A', 'Convertible', '2020 5th Avenue', 'New York');
+INSERT INTO vehicle VALUES (11111122, 'CCC555', 'toyota', 'yaris', 2019, 'red', 'A', 'Convertible', '3256 Wright Avenue', 'Boulder');
+INSERT INTO vehicle VALUES (11111123, 'CCC666', 'toyota', 'camry', 2019, 'blue', 'A', 'Convertible', '5238 Somerville Street', 'Vancouver');
+INSERT INTO vehicle VALUES (11111124, 'CCC888', 'toyota', 'prius', 2019, 'sliver', 'A', 'Hybrid', '2020 5th Avenue', 'New York');
+INSERT INTO vehicle VALUES (11111125, 'CCC999', 'toyota', 'sienna', 2019, 'white', 'A', 'Convertible', '2020 5th Avenue', 'New York');
+INSERT INTO vehicle VALUES (11111126, 'CCC111', 'toyota', 'prius', 2019, 'red', 'A', 'Hybrid', '6520 Arabella Drive', 'Keystone');
 
 -- /* add more rents */
 
