@@ -2,7 +2,7 @@ package controller;
 
 import database.DBConnectionHandler;
 import model.Report;
-import ui.ReportUI;
+import ui.DailyRentalReportUI;
 
 public class URent {
     private DBConnectionHandler dbHandler = null;
@@ -26,20 +26,8 @@ public class URent {
         URent urent = new URent();
         urent.dbHandler.connect();
         Report report = urent.dbHandler.generateReport("2/11/2019");
-        ReportUI reportUI = new ReportUI(report);
-
-//        urent.dbHandler.generateReportByBranch("6520 Arabella Drive");
+        DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+        Report branchReport = urent.dbHandler.generateReportByBranch("6520 Arabella Drive");
+        DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
     }
-
-    /** generates report **/
-//    public void generateReport() {
-//       dbHandler.generateReport();
-//    }
-
-    /** generates report for branch **/
-//    public void generateReportForBranch(string branch) {
-//        dbHandler.generateReportForBranch(branch);
-//    }
-
-
 }

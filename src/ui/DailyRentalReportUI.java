@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class ReportUI {
+public class DailyRentalReportUI {
 
     private JTabbedPane tabbedPane = new JTabbedPane();
     private JFrame f = new JFrame();
@@ -21,8 +21,10 @@ public class ReportUI {
         }
     };
 
-    public ReportUI(Report report) {
-        tabbedPane.addTab("Branch and Car Type", new JScrollPane(report.getBranchAndCarTable()));
+    public DailyRentalReportUI(Report report) {
+        if (report.getBranchAndCarTable() != null) {
+            tabbedPane.addTab("Branch and Car Type", new JScrollPane(report.getBranchAndCarTable()));
+        }
         tabbedPane.addTab("Branch", new JScrollPane(report.getBranchTable()));
         tabbedPane.addTab("Vehicle Details", new JScrollPane(report.getVTable()));
         tabbedPane.addTab("Total Number of Rentals", new JScrollPane(new JLabel(report.getTotalNumRentals())));
