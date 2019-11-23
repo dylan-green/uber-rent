@@ -19,7 +19,7 @@ public class URent {
         if (rent.dbHandler.login()) {
             /* Test your transactions here */
             // rent.dbHandler.rentWithReservation(333444, "Dylan Green", 123459, 0721);
-            // rent.dbHandler.returnRental(6055231);
+            rent.dbHandler.returnRental(6055231);
         } else {
             System.out.println("FAILURE!");
         }

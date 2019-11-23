@@ -68,21 +68,19 @@ public class DBConnectionHandler {
 			String cardname,
 			int cardNo,
 			int expDate,
-			int odometer,
 			int confnum) {
 		try {
 			/* Add the rental to the RENT table */
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO rent VALUES (?,?,?,?,?,?,?,?,?,?)");
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO rent VALUES (?,?,?,?,?,?,?,?,?)");
 			ps.setInt(1, rent.getRentId());
 			ps.setInt(2, rent.getVid());
 			ps.setInt(3, rent.getDlnum());
 			ps.setDate(4, rent.getFrom());
 			ps.setDate(5, null);
-			ps.setInt(6, odometer);
-			ps.setString(7, cardname);
-			ps.setInt(8, cardNo);
-			ps.setInt(9, expDate);
-			ps.setInt(10, confnum);
+			ps.setString(6, cardname);
+			ps.setInt(7, cardNo);
+			ps.setInt(8, expDate);
+			ps.setInt(9, confnum);
 			ps.executeUpdate();
 			ps.close();
 			return true;
@@ -116,7 +114,7 @@ public class DBConnectionHandler {
 			int dlnum) {
 		try {
 			String query =
-			"SELECT vid, odometer " +
+			"SELECT vid " +
 			"FROM vehicle v " +
 			"WHERE v.vstatus='A' AND v.vtname=" + vtname;
 
@@ -128,11 +126,10 @@ public class DBConnectionHandler {
 			}
 
 			int vid = rs.getInt("vid");
-			int odometer = rs.getInt("odometer");
 			Date from = new Date(System.currentTimeMillis());
 			RentModel rent = new RentModel(vid, dlnum, from);
 
-			if (!insertRental(rent, cardname, cardNo, expDate, odometer, 0)) {
+			if (!insertRental(rent, cardname, cardNo, expDate, 0)) {
 				throw new SQLException("There was a problem creating this rental");
 			}
 
@@ -149,7 +146,7 @@ public class DBConnectionHandler {
 	public void rentWithReservation(int confnum, String cardname, int cardNo, int expDate) {
 		try {
 			String query = 
-			"SELECT vid, dlnum, fromDate, odometer " +  
+			"SELECT vid, dlnum, fromDate " +  
 			"FROM reservation r, vehicle v " +
 			"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=" + confnum;
 			
@@ -163,17 +160,16 @@ public class DBConnectionHandler {
 			int vid = rs.getInt("vid");
 			int dlnum = rs.getInt("dlnum");
 			Date from = rs.getDate("fromdate");
-			int odometer = rs.getInt("odometer");
 			RentModel rent = new RentModel(vid, dlnum, from);
 
-			if (!insertRental(rent, cardname, cardNo, expDate, odometer, confnum)) {
+			if (!insertRental(rent, cardname, cardNo, expDate, confnum)) {
 				throw new SQLException("There was a problem creating this rental");
 			}
 
 			if (!setVehicleStatus(vid, "N")) {
 				throw new SQLException("Vehicle " + vid + " is not available");
 			}
-			
+
 			connection.commit();
 			stmt.close();
 
@@ -182,7 +178,6 @@ public class DBConnectionHandler {
 			receipt.append("CONFIRMING RENTAL " + rent.getRentId() + "\n");
 			receipt.append("Date: " + from + "\n");
 			receipt.append("Vehicle ID: " + vid + "\n");
-			receipt.append("Current Mileage: " + odometer + "km \n");
 			receipt.append("Driver: " + dlnum + "\n");
 			System.out.print(receipt.toString());
 		} catch (SQLException e) {

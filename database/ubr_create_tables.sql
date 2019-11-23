@@ -49,7 +49,6 @@ CREATE TABLE rent (
     cust_dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
     toDate DATE,
-    odometer INTEGER NOT NULL,
     cardName VARCHAR(20) NOT NULL,
     cardNo INTEGER NOT NULL,
     expDate INTEGER NOT NULL,
