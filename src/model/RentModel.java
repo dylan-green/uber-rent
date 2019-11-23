@@ -7,69 +7,41 @@ public class RentModel {
 	private final int dlnum;
     private 	  Date to;
     private final Date from;
-    private final int odometer;
-    private final String cardname;
-    private final int cardNo;
-	private final int expDate;
 	private final int rentId;
 
     public RentModel(
         int vid,
         int dlnum,
-        Date from,
-        int odometer,
-        String cardname,
-        int cardNo,
-        int expDate
+        Date from
         ) {
         this.vid = vid;
         this.dlnum = dlnum;
 		this.to = null;
 		this.from = from;
-        this.odometer = odometer;
-        this.cardname = cardname;
-        this.cardNo = cardNo;
-		this.expDate = expDate;
 		this.rentId = dlnum + vid;
     }
 
-	public int getRentId() {
-		return this.rentId;
-	}
-
 	public int getVid() {
-		return this.vid;
+		return vid;
 	}
 
 	public int getDlnum() {
-		return this.dlnum;
+		return dlnum;
 	}
 
-	public Date getFromDate() {
-		return this.from;
+	public Date getFrom() {
+		return from;
 	}
 
-	public Date getToDate() {
-		return this.to;
+	public int getRentId() {
+		return rentId;
 	}
 
-	public void setToDate(Date date) {
-		this.to = date;
+	public Date getTo() {
+		return to;
 	}
 
-	public int getOdometer() {
-		return this.odometer;
-	}
-
-	public String getCardname() {
-		return this.cardname;
-	}
-
-	public int getCardNo() {
-		return this.cardNo;
-	}
-
-	public int getExpDate() {
-		return this.expDate;
+	public void setTo(Date to) {
+		this.to = to;
 	}
 }
