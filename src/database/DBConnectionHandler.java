@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.sql.Date;
 
 import model.ReturnModel;
+import model.RentModel;
 
 public class DBConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
