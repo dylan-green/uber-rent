@@ -93,6 +93,21 @@ public class DBConnectionHandler {
 		}
 	}
 
+	private boolean setVehicleStatus(int vid, String status) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
+			ps.setString(1, status);
+			ps.setInt(2, vid);
+			ps.executeUpdate();
+			ps.close();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+	}
+
 	public void rentWithoutReservation(
 			String cardname,
 			int cardNo,
@@ -119,6 +134,10 @@ public class DBConnectionHandler {
 
 			if (!insertRental(rent, cardname, cardNo, expDate, odometer, 0)) {
 				throw new SQLException("There was a problem creating this rental");
+			}
+
+			if (!setVehicleStatus(vid, "N")) {
+				throw new SQLException("Vehicle " + vid + " is not available");
 			}
 
 		} catch (SQLException e) {
@@ -151,14 +170,11 @@ public class DBConnectionHandler {
 				throw new SQLException("There was a problem creating this rental");
 			}
 
-			/* Set the vehicle status to 'N' Not Available */
-			PreparedStatement ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
-			ps.setString(1, "N");
-			ps.setInt(2, vid);
-			ps.executeUpdate();
-
+			if (!setVehicleStatus(vid, "N")) {
+				throw new SQLException("Vehicle " + vid + " is not available");
+			}
+			
 			connection.commit();
-			ps.close();
 			stmt.close();
 
 			/* Put together a receipt of the necessary information */
@@ -260,4 +276,10 @@ public class DBConnectionHandler {
 // ps.setInt(8, cardNo);
 // ps.setInt(9, expDate);
 // ps.setInt(10, confnum);
+// ps.executeUpdate();
+
+// /* Set the vehicle status to 'N' Not Available */
+// PreparedStatement ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
+// ps.setString(1, "N");
+// ps.setInt(2, vid);
 // ps.executeUpdate();
