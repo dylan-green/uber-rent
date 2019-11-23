@@ -1,5 +1,9 @@
 package controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
+
 import database.DBConnectionHandler;
 import model.Report;
 import ui.DailyRentalReportUI;
@@ -9,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import model.Customer;
+import model.Reservation;
 
 public class URent {
     private DBConnectionHandler dbHandler = null;
