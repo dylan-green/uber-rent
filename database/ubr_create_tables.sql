@@ -17,9 +17,7 @@ CREATE TABLE reservation (
     vtname VARCHAR(20) NOT NULL,
     cust_dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
-    fromTime TIMESTAMP NOT NULL,
     toDate DATE NOT NULL,
-    toTime TIMESTAMP NOT NULL,
     FOREIGN KEY (vtname) REFERENCES vehicletype,
     FOREIGN KEY (cust_dlnum) REFERENCES customer
 );
@@ -37,7 +35,6 @@ CREATE TABLE vehicle (
     model VARCHAR(15) NOT NULL,
     year INTEGER NOT NULL,
     color VARCHAR(10) NOT NULL,
-    odometer INTEGER NOT NULL,
     vstatus VARCHAR(1) DEFAULT 'A',
     vtname VARCHAR(20) NOT NULL,
     b_location VARCHAR(25) NOT NULL,
