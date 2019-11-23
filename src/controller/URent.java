@@ -19,7 +19,8 @@ public class URent {
     }
 
     public void returnRental(int rentId) {
-        dbHandler.returnRental(rentId);
+        String receipt = dbHandler.returnRental(rentId);
+        System.out.print(receipt);
     }
 
     public void generateDailyReport(String date) {

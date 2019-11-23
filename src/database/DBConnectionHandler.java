@@ -66,6 +66,8 @@ public class DBConnectionHandler {
 		}
 	}
 
+	/** Shared between both versions of rent
+	 * 	rentWithReservation / rentWithoutReservation */
 	private boolean insertRental(
 			RentModel rent,
 			String cardname,
@@ -94,6 +96,7 @@ public class DBConnectionHandler {
 		}
 	}
 
+	/** set status in vehicles table for v.vid/status */
 	private boolean setVehicleStatus(int vid, String status) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
@@ -108,18 +111,27 @@ public class DBConnectionHandler {
 			return false;
 		}
 	}
+	
+	/** receipts specifically for rent with/without reservations */
+	private String generateRentReceipt(RentModel rent, Date from, int vid, int dlnum) {
+		/* Put together a receipt of the necessary information */
+		StringBuilder receipt = new StringBuilder();
+		receipt.append("CONFIRMING RENTAL " + rent.getRentId() + "\n");
+		receipt.append("Date: " + from + "\n");
+		receipt.append("Vehicle ID: " + vid + "\n");
+		receipt.append("Driver: " + dlnum + "\n");
 
-	public void rentWithoutReservation(
+		return receipt.toString();
+	}
+
+	public String rentWithoutReservation(
 			String cardname,
 			int cardNo,
 			int expDate,
 			String vtname,
 			int dlnum) {
 		try {
-			String query =
-			"SELECT vid " +
-			"FROM vehicle v " +
-			"WHERE v.vstatus='A' AND v.vtname=" + vtname;
+			String query = "SELECT vid " + "FROM vehicle v " + "WHERE v.vstatus='A' AND v.vtname=" + vtname;
 
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -140,13 +152,17 @@ public class DBConnectionHandler {
 				throw new SQLException("Vehicle " + vid + " is not available");
 			}
 
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
-	}	
+			connection.commit();
+			stmt.close();
 
-	public void rentWithReservation(int confnum, String cardname, int cardNo, int expDate) {
+			return generateRentReceipt(rent, from, vid, dlnum);
+		} catch (SQLException e) {
+			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
+		}
+	}
+
+	public String rentWithReservation(int confnum, String cardname, int cardNo, int expDate) {
 		try {
 			String query = 
 			"SELECT vid, dlnum, fromDate " +  
@@ -176,20 +192,14 @@ public class DBConnectionHandler {
 			connection.commit();
 			stmt.close();
 
-			/* Put together a receipt of the necessary information */
-			StringBuilder receipt = new StringBuilder();
-			receipt.append("CONFIRMING RENTAL " + rent.getRentId() + "\n");
-			receipt.append("Date: " + from + "\n");
-			receipt.append("Vehicle ID: " + vid + "\n");
-			receipt.append("Driver: " + dlnum + "\n");
-			System.out.print(receipt.toString());
+			return generateRentReceipt(rent, from, vid, dlnum);
 		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
 		}
 	}
 
-	public void returnRental(int rentId) {
+	public String returnRental(int rentId) {
 		try {
 			String query =
 			"SELECT fromdate, confnum, day_rate, v.vid "+
@@ -238,10 +248,12 @@ public class DBConnectionHandler {
 			receipt.append(ret.getDays() + " Days * $" + rate + ".00 PER DAY\n");
 			receipt.append("Total: $" + ret.getValue() + ".00\n");
 
-			System.out.print(receipt.toString());
+			return receipt.toString();
+			// System.out.print(receipt.toString());
 		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
+			// System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
 
@@ -250,8 +262,8 @@ public class DBConnectionHandler {
 			if (connection != null) {
 				connection.close();
 			}
-			System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
-			connection = DriverManager.getConnection(ORACLE_URL, "", "");
+			// System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
+			connection = DriverManager.getConnection(ORACLE_URL, "ora_gdylan", "a52143104");
 			connection.setAutoCommit(false);
 
 			return true;
