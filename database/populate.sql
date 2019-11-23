@@ -132,7 +132,7 @@ INSERT INTO rent VALUES (
     89898989,
     5551234,
     TO_DATE('1/11/2019','DD/MM/YYYY'),
-    NULL,
+    TO_DATE('10/11/2019','DD/MM/YYYY'),
     2500,
     'Dale Cooper',
     19127,
@@ -145,7 +145,7 @@ INSERT INTO rent VALUES (
     102030405,
     5552331,
     TO_DATE('5/11/2019','DD/MM/YYYY'),
-    NULL,
+    TO_DATE('7/11/2019','DD/MM/YYYY'),
     1200,
     'Laura Palmer',
     19387,
@@ -158,7 +158,7 @@ INSERT INTO rent VALUES (
     111222345,
     5552511,
     TO_DATE('10/11/2019','DD/MM/YYYY'),
-    NULL,
+    TO_DATE('11/11/2019','DD/MM/YYYY'),
     10298,
     'BOB',
     79357,
@@ -171,7 +171,7 @@ INSERT INTO rent VALUES (
     99999999,
     5551342,
     TO_DATE('14/11/2019','DD/MM/YYYY'),
-    NULL,
+    TO_DATE('16/11/2019','DD/MM/YYYY'),
     7831,
     'Gordon Cole',
     13235,
@@ -216,6 +216,42 @@ INSERT INTO rent VALUES (
     1235261782,
     0820,
     NULL
+);
+
+INSERT INTO rent_return VALUES (
+    2,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
+);
+
+INSERT INTO rent_return VALUES (
+    7,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
+);
+
+INSERT INTO rent_return VALUES (
+    1,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
+);
+
+INSERT INTO rent_return VALUES (
+    5,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
+);
+
+INSERT INTO rent_return VALUES (
+    4,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
+);
+
+INSERT INTO rent_return VALUES (
+    6,
+    TO_DATE('23/11/2019','DD/MM/YYYY'),
+    3
 );
 
 COMMIT;
