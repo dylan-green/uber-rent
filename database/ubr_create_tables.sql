@@ -46,7 +46,7 @@ CREATE TABLE vehicle (
 CREATE TABLE rent (
     rent_id INTEGER NOT NULL PRIMARY KEY,
     vid INTEGER NOT NULL,
-    cust_dlnum INTEGER NOT NULL,
+    dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
     toDate DATE,
     odometer INTEGER NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE rent (
     expDate INTEGER NOT NULL,
     confnum INTEGER,
     FOREIGN KEY (vid) REFERENCES vehicle,
-    FOREIGN KEY (cust_dlnum) REFERENCES customer,
+    FOREIGN KEY (dlnum) REFERENCES customer,
     FOREIGN KEY (confnum) REFERENCES reservation
 );
 

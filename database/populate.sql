@@ -19,7 +19,7 @@ INSERT INTO customer VALUES (5559705, 'Justin Timberlake', '20 Timberlake Rd', '
 INSERT INTO customer VALUES (5550293, 'Will Smith', '10 Hollywood Blvd', 'Bel Air', 60594);
 INSERT INTO customer VALUES (0405932, 'Nick Carter', '19 Venice Blvd', 'Santa Monica', 16049);
 INSERT INTO customer VALUES (8392855, 'Aaron Carter', 'Aarons House', 'Los Angeles', 20405);
-INSERT INTO customer VALUES (0897829, 'Hillary Duff', 'Aarons House', 'Los Angeles', 12345);
+INSERT INTO customer VALUES (0897829, 'Hilary Duff', 'Aarons House', 'Los Angeles', 12345);
 INSERT INTO customer VALUES (9705938, 'Lance Bass', '12 Washup Lane', 'New York', 48594);
 INSERT INTO customer VALUES (2817594, 'Joey Fatone', '1515 NSync Drive', 'Nashville', 69504);
 INSERT INTO customer VALUES (2039844, 'JC Chasez', '1515 NSync Drive', 'Nashville', 16958);
@@ -211,7 +211,6 @@ INSERT INTO rent VALUES (
     0405932,
     TO_DATE('18/11/2019','DD/MM/YYYY'),
     NULL,
-    90000,
     'Shelly Johnson',
     1235261782,
     0820,
@@ -243,7 +242,6 @@ INSERT INTO rent VALUES (
     0405932,
     TO_DATE('18/11/2019','DD/MM/YYYY'),
     NULL,
-    90000,
     'Shelly Johnson',
     1235261782,
     0820,
@@ -256,7 +254,6 @@ INSERT INTO rent VALUES (
     0405932,
     TO_DATE('18/11/2019','DD/MM/YYYY'),
     NULL,
-    90000,
     'Shelly Johnson',
     1235261782,
     0820,
@@ -269,7 +266,6 @@ INSERT INTO rent VALUES (
     0405932,
     TO_DATE('18/11/2019','DD/MM/YYYY'),
     NULL,
-    90000,
     'Shelly Johnson',
     1235261782,
     0820,
@@ -282,7 +278,6 @@ INSERT INTO rent VALUES (
     5551234,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    2500,
     'Dale Cooper',
     19127,
     0820,
@@ -295,24 +290,10 @@ INSERT INTO rent VALUES (
     5552331,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    1200,
     'Laura Palmer',
     19387,
     0820,
     222333
-);
-
-INSERT INTO rent VALUES (
-    13,
-    111222345,
-    5552511,
-    TO_DATE('2/11/2019','DD/MM/YYYY'),
-    NULL,
-    10298,
-    'BOB',
-    79357,
-    0820,
-    111222
 );
 
 INSERT INTO rent VALUES (
@@ -321,7 +302,6 @@ INSERT INTO rent VALUES (
     5551342,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    7831,
     'Gordon Cole',
     13235,
     0820,
@@ -335,7 +315,6 @@ INSERT INTO rent VALUES (
     5551234,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    2500,
     'Dale Cooper',
     19127,
     0820,
@@ -348,24 +327,10 @@ INSERT INTO rent VALUES (
     5552331,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    1200,
     'Laura Palmer',
     19387,
     0820,
     222333
-);
-
-INSERT INTO rent VALUES (
-    17,
-    111222345,
-    5552511,
-    TO_DATE('2/11/2019','DD/MM/YYYY'),
-    NULL,
-    10298,
-    'BOB',
-    79357,
-    0820,
-    111222
 );
 
 INSERT INTO rent VALUES (
@@ -374,7 +339,6 @@ INSERT INTO rent VALUES (
     5551342,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    7831,
     'Gordon Cole',
     13235,
     0820,
@@ -387,7 +351,6 @@ INSERT INTO rent VALUES (
     5550293,
     TO_DATE('2/11/2019','DD/MM/YYYY'),
     NULL,
-    3219,
     'Dougie Jones',
     19352,
     0820,
@@ -400,7 +363,6 @@ INSERT INTO rent VALUES (
     5559705,
     TO_DATE('3/11/2019','DD/MM/YYYY'),
     NULL,
-    37190,
     'Janey-E Jones',
     19357,
     0820,
