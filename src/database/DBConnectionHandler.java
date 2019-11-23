@@ -135,31 +135,36 @@ public class DBConnectionHandler {
 	/** Generates Daily Report (for all branches) **/
 	public Report generateReport(String date) {
             try {
-
             	// Create statements for all SQL Queries
-				Statement byBranchStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				PreparedStatement byBranchStm = connection.prepareStatement("select v.b_location as branch, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') group by v.b_location", ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
-				Statement byBranchCarStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				PreparedStatement byBranchCarStm = connection.prepareStatement("select v.b_location as branch, v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') group by v.b_location, v.vtname",
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
-				Statement vehicleDeetsStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				PreparedStatement vehicleDeetsStm = connection.prepareStatement("select v.b_location as branch, v.make, v.model, v.color, v.year, r.RENT_ID, r.FROMDATE from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY')", ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
-				Statement countTotalStm = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+				PreparedStatement countTotalStm = connection.prepareStatement("select COUNT(*) as count from rent where rent.FROMDATE = TO_DATE(?,'DD/MM/YYYY')", ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
+				byBranchStm.setString(1, date);
+				byBranchCarStm.setString(1,date);
+				vehicleDeetsStm.setString(1,date);
+				countTotalStm.setString(1, date);
 
 				// Processing for Report of Number of Rentals by Branch
-				ResultSet branchRes = byBranchStm.executeQuery("select v.b_location as branch, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') group by v.b_location");
+				ResultSet branchRes = byBranchStm.executeQuery();
+
 				JTable branchTable = getTotalRentalTable(branchRes, false);
 
 				// Processing for Report of Number Of Rentals by Branch and Car Type
-				ResultSet branchCarRes = byBranchCarStm.executeQuery("select v.b_location as branch, v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') group by v.b_location, v.vtname");
+				ResultSet branchCarRes = byBranchCarStm.executeQuery();
 				JTable branchCarTable = getNumRentalsTable(branchCarRes);
 
 				//Processing for Vehicle Details
-				ResultSet vehicleDetails = vehicleDeetsStm.executeQuery("select v.b_location as branch, v.make, v.model, v.color, v.year, r.RENT_ID, r.FROMDATE from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY')");
+				ResultSet vehicleDetails = vehicleDeetsStm.executeQuery();
 				JTable vTable = getVTable(vehicleDetails);
 
 				//Processing for Total Number of Rentals
-				ResultSet totalRentals = countTotalStm.executeQuery("select COUNT(*) as count from rent where rent.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY')");
+				ResultSet totalRentals = countTotalStm.executeQuery();
 				String numRentals = "";
 				while (totalRentals.next()) {
 					numRentals = String.valueOf(totalRentals.getString("count"));
@@ -254,20 +259,21 @@ public class DBConnectionHandler {
 		return rowCount;
 	}
 
-    public Report generateReportByBranch(String branch) {
+    public Report generateReportByBranch(String branch, String date) {
 		try {
-			//TODO ALSO TAKE IN DATE
-
-			PreparedStatement totalRentalsStm = connection.prepareStatement("select count(*) as count from rent r, vehicle v where r.vid = v.vid AND v.b_location = ? and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY')", ResultSet.TYPE_SCROLL_INSENSITIVE,
+			PreparedStatement totalRentalsStm = connection.prepareStatement("select count(*) as count from rent r, vehicle v where r.vid = v.vid AND v.b_location = ? and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY')", ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
-			PreparedStatement byCarTypeStm = connection.prepareStatement("select v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') and v.b_location = ? group by v.vtname", ResultSet.TYPE_SCROLL_INSENSITIVE,
+			PreparedStatement byCarTypeStm = connection.prepareStatement("select v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') and v.b_location = ? group by v.vtname", ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
-			PreparedStatement vehicleDeetsStm = connection.prepareStatement("select v.B_LOCATION as branch, v.make, v.model, v.color, v.year, r.RENT_ID, r.FROMDATE from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE('2/11/2019','DD/MM/YYYY') and v.b_location = ?", ResultSet.TYPE_SCROLL_INSENSITIVE,
+			PreparedStatement vehicleDeetsStm = connection.prepareStatement("select v.B_LOCATION as branch, v.make, v.model, v.color, v.year, r.RENT_ID, r.FROMDATE from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') and v.b_location = ?", ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
 			//set location
 			totalRentalsStm.setString(1, branch);
-			byCarTypeStm.setString(1, branch);
-			vehicleDeetsStm.setString(1, branch);
+			totalRentalsStm.setString(2, date);
+			byCarTypeStm.setString(2, branch);
+			byCarTypeStm.setString(1, date);
+			vehicleDeetsStm.setString(2, branch);
+			vehicleDeetsStm.setString(1, date);
 
 			ResultSet totalRentRes = totalRentalsStm.executeQuery();
 			ResultSet carTypeRes = byCarTypeStm.executeQuery();

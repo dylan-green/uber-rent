@@ -30,7 +30,7 @@ public class DailyRentalReportUI {
         tabbedPane.addTab("Total Number of Rentals", new JScrollPane(new JLabel(report.getTotalNumRentals())));
         tabbedPane.setTabPlacement(JTabbedPane.TOP);
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f.add(tabbedPane, BorderLayout.CENTER);
         f.pack();
         f.setVisible(true);
