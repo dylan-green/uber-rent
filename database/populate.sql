@@ -40,9 +40,7 @@ INSERT INTO reservation VALUES(
     'Hybrid',
     5551234,
     TO_DATE('19/11/2019','DD/MM/YYYY'),
-    CURRENT_TIMESTAMP,
-    TO_DATE('30/11/2019', 'DD/MM/YYYY'),
-    CURRENT_TIMESTAMP
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
 );
 
 INSERT INTO reservation VALUES(
@@ -50,9 +48,7 @@ INSERT INTO reservation VALUES(
     'Truck',
     5552511,
     TO_DATE('19/11/2019','DD/MM/YYYY'),
-    CURRENT_TIMESTAMP,
-    TO_DATE('30/11/2019', 'DD/MM/YYYY'),
-    CURRENT_TIMESTAMP
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
 );
 
 INSERT INTO reservation VALUES(
@@ -60,9 +56,7 @@ INSERT INTO reservation VALUES(
     'Sedan',
     5550293,
     TO_DATE('19/11/2019','DD/MM/YYYY'),
-    CURRENT_TIMESTAMP,
-    TO_DATE('30/11/2019', 'DD/MM/YYYY'),
-    CURRENT_TIMESTAMP
+    TO_DATE('30/11/2019', 'DD/MM/YYYY')
 );
 
 /* vstatus, */
@@ -73,7 +67,6 @@ INSERT INTO vehicle VALUES (
     'Mazda3 Sport',
     2012,
     'white',
-    104000,
     'A',
     'Hatchback',
     '5238 Somerville Street',
@@ -87,7 +80,6 @@ INSERT INTO vehicle VALUES (
     'Jetta GTI',
     2001,
     'silver',
-    200000,
     'A',
     'Sedan',
     '6520 Arabella Drive',
@@ -101,7 +93,6 @@ INSERT INTO vehicle VALUES (
     'Liberty T',
     2000,
     'white',
-    220000,
     'A',
     'SUV',
     '6520 Arabella Drive',
@@ -115,9 +106,21 @@ INSERT INTO vehicle VALUES (
     'X-Trail',
     2004,
     'tan',
-    400000,
     'A',
     'SUV',
+    '20 Sunset Boulevard',
+    'Los Angeles'
+);
+
+INSERT INTO vehicle VALUES (
+    9999999,
+    'AXH29G',
+    'Nissan',
+    'X-Trail',
+    2004,
+    'tan',
+    'N',
+    'Convertible',
     '20 Sunset Boulevard',
     'Los Angeles'
 );
