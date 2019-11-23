@@ -30,7 +30,7 @@ public class RentModel {
         this.cardname = cardname;
         this.cardNo = cardNo;
 		this.expDate = expDate;
-		this.rentId = dlnum;
+		this.rentId = dlnum + vid;
     }
 
 	public int getRentId() {

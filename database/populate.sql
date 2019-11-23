@@ -48,7 +48,7 @@ INSERT INTO reservation
 VALUES(123456,'Hybrid',2817594,TO_DATE('10/11/2019','DD/MM/YYYY'),TO_DATE('20/11/2019','DD/MM/YYYY'));
 
 INSERT INTO vehicle VALUES (
-    102030405,
+    384957,
     '989RNL',
     'Mazda',
     'Mazda3 Sport',
@@ -62,7 +62,7 @@ INSERT INTO vehicle VALUES (
 );
 
 INSERT INTO vehicle VALUES (
-    111222345,
+    504938,
     '844TYJ',
     'Volkswagen',
     'Jetta GTI',
@@ -76,7 +76,7 @@ INSERT INTO vehicle VALUES (
 );
 
 INSERT INTO vehicle VALUES (
-    99999999,
+    493027,
     '887BRO',
     'Jeep',
     'Liberty T',
@@ -90,7 +90,7 @@ INSERT INTO vehicle VALUES (
 );
 
 INSERT INTO vehicle VALUES (
-    89898989,
+    593028,
     'AXH29G',
     'Nissan',
     'X-Trail',
@@ -105,7 +105,7 @@ INSERT INTO vehicle VALUES (
 
 INSERT INTO rent VALUES (
     1,
-    89898989,
+    593028,
     5551234,
     TO_DATE('1/11/2019','DD/MM/YYYY'),
     NULL,
@@ -118,7 +118,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     2,
-    102030405,
+    504938,
     5552331,
     TO_DATE('5/11/2019','DD/MM/YYYY'),
     NULL,
@@ -131,7 +131,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     3,
-    111222345,
+    593028,
     5552511,
     TO_DATE('10/11/2019','DD/MM/YYYY'),
     NULL,
@@ -144,7 +144,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     4,
-    99999999,
+    504938,
     5551342,
     TO_DATE('14/11/2019','DD/MM/YYYY'),
     NULL,
@@ -157,7 +157,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     5,
-    89898989,
+    493027,
     5550293,
     TO_DATE('19/11/2019','DD/MM/YYYY'),
     NULL,
@@ -170,7 +170,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     6,
-    99999999,
+    493027,
     5559705,
     TO_DATE('25/11/2019','DD/MM/YYYY'),
     NULL,
@@ -183,7 +183,7 @@ INSERT INTO rent VALUES (
 
 INSERT INTO rent VALUES (
     7,
-    89898989,
+    384957,
     0405932,
     TO_DATE('28/11/2019','DD/MM/YYYY'),
     NULL,
