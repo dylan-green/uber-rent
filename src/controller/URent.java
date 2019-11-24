@@ -90,16 +90,27 @@ class MainPanel {
     private JPanel panelOne = new JPanel(new FlowLayout());
     private JPanel panelThree = new JPanel(new FlowLayout());
     private JPanel panelFour = new JPanel(new FlowLayout());
+    private JPanel panelFive = new JPanel(new FlowLayout());
+    private JPanel panelSix = new JPanel(new FlowLayout());
 
 
     public MainPanel(URent rent) {
-        panelOne.setBorder(new EmptyBorder(2,3,2,3));
-        panelOne.add(rentalReportAllBranchBtn);
+        JPanel masterPanel = new JPanel();
+        masterPanel.setLayout(new GridLayout(3,3));
+
+        panelOne.add(reserveBtn);
+        panelTwo.add(viewVehiclesBtn);
+
+        masterPanel.add(panelOne);
+        masterPanel.add(panelTwo);
+
         JTextField dateEntryForAllBranches;
         dateEntryForAllBranches = new JTextField("Date For All Branches");
         dateEntryForAllBranches.setBounds(100,100,300,50); // TODO fix textfield size
-        panelOne.add(dateEntryForAllBranches);
-        f.add(panelOne, BorderLayout.NORTH);
+        panelThree.add(dateEntryForAllBranches);
+        panelThree.add(rentalReportAllBranchBtn);
+//        f.add(panelOne, BorderLayout.NORTH);
+        masterPanel.add(panelThree);
 
         rentalReportAllBranchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -109,13 +120,14 @@ class MainPanel {
             }
         });
 
-        panelTwo.add(rentalReportOneBranchBtn);
         JTextField dateForOneBranchField, branchField;
         dateForOneBranchField = new JTextField("Date For One Branch");
         branchField = new JTextField("Branch for Single Branch Report");
-        panelTwo.add(dateForOneBranchField);
-        panelTwo.add(branchField);
-        f.add(panelTwo, BorderLayout.SOUTH);
+        panelFour.add(dateForOneBranchField);
+        panelFour.add(branchField);
+        panelFour.add(rentalReportOneBranchBtn);
+//        f.add(panelTwo, BorderLayout.SOUTH);
+        masterPanel.add(panelFour);
 
 
         rentalReportOneBranchBtn.addActionListener(new ActionListener() {
@@ -127,25 +139,28 @@ class MainPanel {
         });
 
         JTextField rentIdField = new JTextField("Rent ID for Return");
-        panelThree.add(returnBtn);
-        panelThree.add(rentIdField);
+        panelFive.add(rentIdField);
         returnBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int rentId = Integer.parseInt(rentIdField.getText());
                 rent.returnRental(rentId);
             }
         });
-        f.add(panelThree, BorderLayout.CENTER);
+        panelFive.add(returnBtn);
+//        f.add(panelThree, BorderLayout.CENTER);
+        masterPanel.add(panelFive);
 
-        panelFour.add(returnReportsBtn);
+        panelSix.add(returnReportsBtn);
         returnReportsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 rent.generateDailyReturnsReport();
             }
         });
-        f.add(panelFour, BorderLayout.EAST);
+//        f.add(panelFour, BorderLayout.EAST);
+        masterPanel.add(panelSix);
 
-        f.setSize(800,500);
+        f.add(masterPanel);
+        f.setSize(800,300);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
