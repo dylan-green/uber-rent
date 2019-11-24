@@ -4,15 +4,30 @@ import model.RentModel;
 import model.ReportModel;
 
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.ArrayList;
+import java.time.temporal.ChronoUnit;
 import java.sql.*;
 
 import model.ReportType;
 import model.ReturnModel;
 
+import model.Customer;
+import model.Reservation;
+
 public class DBConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@dbhost.students.cs.ubc.ca:1522:stu";
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
+
 	private Connection connection = null;
 
     public DBConnectionHandler() {
@@ -241,7 +256,7 @@ public class DBConnectionHandler {
 				connection.close();
 			}
 			System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
-			connection = DriverManager.getConnection(ORACLE_URL, "", "");
+			connection = DriverManager.getConnection(ORACLE_URL, "ora_sstarke", "a20448122");
 			connection.setAutoCommit(false);
 
 			return true;
@@ -250,6 +265,219 @@ public class DBConnectionHandler {
 			return false;
 		}
 	}
+
+	public String makeReservationTransaction ( // todo THROW error if desired vehicle not available
+		String res_vtname,
+		int dlnum,
+		String res_to_date,
+		String res_from_date,
+		String cust_name,
+		String cust_addr,
+		String cust_city,
+		int cellphone) throws SQLException {
+			// check for vehicle availability
+			// If the customer’s desired vehicle is not available, an appropriate error message should be shown.
+			//  The database state should reflect this at the end of the action.
+
+			// check if dlnum refers to existing customer
+			Statement stmt = null;
+			String query = "SELECT * FROM customer WHERE dlnum=" + dlnum;
+			//try {
+				int res = -1;
+				stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(query);
+				while (rs.next()) {
+					res = rs.getInt("dlnum");
+				};
+				
+				// not a customer so create new customer
+				if (res == -1) {
+					insertCustomer(new Customer(dlnum, cust_name, cust_addr, cust_city, cellphone)); 
+				}
+
+			//} 
+			// catch (SQLException e) {
+			// 	System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			// 	rollbackConnection();
+			// }
+			Reservation r = new Reservation(res_vtname, dlnum, res_from_date, res_to_date);
+			isVehicleAvailable(res_vtname);
+			insertReservation(r);
+			StringBuilder receipt = new StringBuilder();
+			receipt.append("RESERVATION: Confirmation Number:" + r.getConfnum() + "\n");
+			receipt.append("To Date: " + r.getToDate() + "\n");
+			receipt.append("From Date: " + r.getFromDate() + "\n");
+			receipt.append("Vehicle Type: " + r.getVtname() + "\n");
+			receipt.append("Drivers License: " + r.getCustDlnum() + "\n");
+			return receipt.toString();
+	}
+
+	public void isVehicleAvailable(String vehicleType) throws SQLException {
+		Statement stmt = null;
+		String query = "SELECT v.vid FROM vehicle v WHERE v.vtname = '" + vehicleType + "' AND " + "v.vstatus = 'A'";
+
+		stmt = connection.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		if (!rs.next()) {
+			throw new SQLException("No available vehicles found\n");
+		}	
+	}
+
+	public void insertCustomer(Customer customer) throws SQLException {
+		//try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?,?,?)");
+			ps.setInt(1, customer.getDlnum());
+			ps.setString(2, customer.getCustomerName());
+			ps.setString(3, customer.getCustomerAddr());
+			ps.setString(4, customer.getCustomerCity());
+			ps.setInt(5, customer.getCellphone());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		//} 
+		// catch (SQLException e) {
+		// 	System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		// 	rollbackConnection();
+		// }
+	}
+
+	public void insertReservation(Reservation reservation) throws SQLException {
+		//try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,TO_DATE(?,'DD/MM/YYYY'),TO_DATE(?,'DD/MM/YYYY'))");
+			ps.setInt(1, reservation.getConfnum());
+			ps.setString(2, reservation.getVtname());
+			ps.setInt(3, reservation.getCustDlnum());
+			ps.setString(4, reservation.getFromDate());
+			ps.setString(5, reservation.getToDate());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		//} 
+		// catch (SQLException e) {
+		// 	System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		// 	rollbackConnection();
+		// }
+	}
+
+	public String availableVehicleTransaction(String vehicleType, String location, String toDate, String fromDate, String flag) throws SQLException {
+		Statement stmt = null;
+		Statement stmt2 = null;
+		String query = "SELECT v.vid AS id, v.vlicense AS license, v.make AS make, v.model AS model, v.year AS year, v.color AS color, v.vstatus AS status, v.vtname AS name, v.b_location AS location, v.city AS city FROM vehicle v WHERE ";
+		String queryCount = "SELECT COUNT(v.vid) AS count FROM vehicle v WHERE ";
+		String queryRentedVehicles = "";
+		Boolean andRequired = false;
+		//String availableVehicleResults = "";
+
+		// if vehicleType passed in then add to query
+		if (!vehicleType.equals("")) {
+			query = query + "v.vtname = '" + vehicleType + "' ";
+			queryCount = queryCount + "v.vtname = '" + vehicleType + "' ";
+			andRequired = true;
+		}
+		// if location passed in then add to query
+		if (!location.equals("")) {
+			if (andRequired) {
+				query = query + "AND ";
+				queryCount = queryCount + "AND ";
+			}
+			query = query + "v.b_location = '" + location + "' ";
+			queryCount = queryCount + "v.b_location = '" + location + "' ";
+			andRequired = true;
+		}
+
+		// if date exists, construct query that will get all the vehicles rented in this time period
+		if (!toDate.equals("") && !fromDate.equals("")) {
+			if (andRequired) {
+				query = query + "AND ";
+				queryCount = queryCount + "AND ";
+			}
+			queryRentedVehicles = "SELECT r.vid FROM rent r WHERE r.toDate >= TO_DATE(" + toDate + ",'DD/MM/YYYY')  AND r.fromDate <= TO_DATE(" + fromDate + ",'DD/MM/YYYY')";
+			query = query + "v.vid NOT IN (" + queryRentedVehicles + ") ";
+			queryCount = queryCount + "v.vid NOT IN (" + queryRentedVehicles + ") ";
+			andRequired = true;
+		} else {
+			if (andRequired) {
+				query = query + "AND ";
+				queryCount = queryCount + "AND ";
+			}
+			query = query + "v.vstatus = " + "'A' ";
+			queryCount = queryCount + "v.vstatus = " + "'A' ";
+
+		}
+		// TODO execute for both query and queryCount
+		StringBuilder availableVehicleResults = new StringBuilder();
+		availableVehicleResults.append("id                    license                 make                 model                 year                 color                 status                 name                 address                 city                 "+ "\n");
+		try {
+			stmt = connection.createStatement();
+			System.out.print(query);
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				//v.b_location AS location, v.city AS city 
+				availableVehicleResults.append(rs.getString("id") + "              ");
+				availableVehicleResults.append(rs.getString("license") + "              ");
+				availableVehicleResults.append(rs.getString("make") + "              ");
+				availableVehicleResults.append(rs.getString("model") + "              ");
+				availableVehicleResults.append(rs.getString("year") + "              ");
+				availableVehicleResults.append(rs.getString("color") + "              ");
+				availableVehicleResults.append(rs.getString("status") + "              ");
+				availableVehicleResults.append(rs.getString("name") + "              ");
+				availableVehicleResults.append(rs.getString("location") + "              ");
+				availableVehicleResults.append(rs.getString("city") + "              ");
+				availableVehicleResults.append("\n");
+			};
+			
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+		StringBuilder availableVehicleCount = new StringBuilder();
+		availableVehicleCount.append("Number of available vehicles for Type: " + vehicleType + " Location: " + location +" toDate: " + toDate + " fromDate: " + fromDate + "\n");
+		try {
+			stmt2 = connection.createStatement();
+			System.out.print(queryCount);
+			ResultSet rs = stmt.executeQuery(queryCount);
+			while (rs.next()) {
+				availableVehicleCount.append(rs.getInt("count"));
+			};
+			
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+		if (flag.equals("count")) {
+			return availableVehicleCount.toString();
+		} else {
+			return availableVehicleResults.toString();
+		}
+		
+
+	}
+
+	public void generateReportForBranch(String location, String city) {
+		Statement stmt = null;
+		String query = "SELECT v.vtname AS VehicleType, count(v.vid) AS Returned, SUM(vt.day_rate * (r.toDate - r.fromDate)) AS Revenue "
+		+ "FROM vehicle v, rent r, rent_return rr, vehicletype vt "
+		+ "WHERE rr.return_id = r.rent_id AND r.vid = v.vid AND v.vtname = vt.vtname AND v.b_location = '" + location + "' AND v.city = '" + city + "' "
+		+ "GROUP BY v.vtname;";
+
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				// 
+			};
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
 
 	/** Generates Daily Rental Report (for all branches) **/
 	public ReportModel generateRentalReport(String date) throws SQLException {

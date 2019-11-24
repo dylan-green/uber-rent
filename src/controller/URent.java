@@ -1,5 +1,9 @@
 package controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
+
 import database.DBConnectionHandler;
 import model.ReportModel;
 import ui.DailyRentalReportUI;
@@ -8,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import model.Customer;
+import model.Reservation;
 import java.sql.SQLException;
 
 public class URent {
@@ -16,6 +22,43 @@ public class URent {
     public URent() {
         dbHandler = new DBConnectionHandler();
         System.out.println(dbHandler);
+    }
+
+    public void makeReservation(String res_vtname, int dlnum, String res_to_date, String res_from_date, 
+    String cust_name, String cust_addr, String cust_city, int cellphone) {
+        try {
+           String receipt = dbHandler.makeReservationTransaction(res_vtname, dlnum, res_to_date, res_from_date, cust_name, cust_addr, cust_city, cellphone);
+           JOptionPane.showMessageDialog(new JFrame(),  receipt, "Reservation Confirmation", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void viewVehicles(String vehicleType, String location, String toDate, String fromDate) {
+        try {
+            String results = dbHandler.availableVehicleTransaction(vehicleType, location, toDate, fromDate, "details");
+            JOptionPane.showMessageDialog(new JFrame(),  results, "Available Vehicles", JOptionPane.INFORMATION_MESSAGE);
+         } catch (SQLException e) {
+             JOptionPane.showMessageDialog(new JFrame(),
+                     "Error! Sorry something went wrong! \n" + e.toString(),
+                     "Oops!",
+                     JOptionPane.ERROR_MESSAGE);
+         }
+    }
+
+    public void viewVehicleCount(String vehicleType, String location, String toDate, String fromDate) {
+        try {
+            String results = dbHandler.availableVehicleTransaction(vehicleType, location, toDate, fromDate, "count");
+            JOptionPane.showMessageDialog(new JFrame(),  results, "Available Vehicles", JOptionPane.INFORMATION_MESSAGE);
+         } catch (SQLException e) {
+             JOptionPane.showMessageDialog(new JFrame(),
+                     "Error! Sorry something went wrong! \n" + e.toString(),
+                     "Oops!",
+                     JOptionPane.ERROR_MESSAGE);
+         }
     }
 
     public void returnRental(int rentId) {
@@ -118,7 +161,8 @@ class MainPanel {
     private JButton rentalReportAllBranchBtn = new JButton("Generate Daily Rental Report");
     private JButton rentalReportOneBranchBtn = new JButton("Generate Branch Daily Rental Report");
     private JButton reserveBtn = new JButton("Reserve");
-    private JButton viewVehiclesBtn = new JButton("View Available Vehicles");
+    private JButton viewVehiclesBtn = new JButton("View Available Vehicles (Details)");
+    private JButton viewVehiclesBtnCount = new JButton("View Available Vehicles (Count)");
     private JButton returnReportsBtn = new JButton("Return Report For Today");
     private JButton returnReportOneBranchBtn = new JButton("Return Report for Branch");
     private JButton returnBtn = new JButton("Return");
@@ -138,8 +182,39 @@ class MainPanel {
         JPanel masterPanel = new JPanel();
         masterPanel.setLayout(new GridLayout(4,4));
 
+        JTextField vehicle_type2, location2, toDate2, fromDate2;
+        vehicle_type2 = new JTextField("Vehicle type");
+        location2 = new JTextField("Location");
+        toDate2 = new JTextField("To Date");
+        fromDate2 = new JTextField("From Date");
+        panelTwo.add(vehicle_type2);
+        panelTwo.add(location2);
+        panelTwo.add(toDate2);
+        panelTwo.add(fromDate2);
+
+
+        // set up reservation inputs
+        JTextField vehicle_type, dlnumber, to_date, from_date, cust_name, cust_addr, cust_city, cellphone;
+        vehicle_type = new JTextField("Vehicle type");
+        dlnumber = new JTextField("Drivers license number");
+        to_date = new JTextField("To date");
+        from_date = new JTextField("From date");
+        cust_name = new JTextField("Customer name");
+        cust_addr = new JTextField("Customer address");
+        cust_city = new JTextField("Customer city");
+        cellphone = new JTextField("Cellphone");
+        panelOne.add(vehicle_type);
+        panelOne.add(dlnumber);
+        panelOne.add(to_date);
+        panelOne.add(from_date);
+        panelOne.add(cust_name);
+        panelOne.add(cust_addr);
+        panelOne.add(cust_city);
+        panelOne.add(cellphone);
+
         panelOne.add(reserveBtn);
         panelTwo.add(viewVehiclesBtn);
+        panelTwo.add(viewVehiclesBtnCount);
 
         masterPanel.add(panelOne);
         masterPanel.add(panelTwo);
@@ -150,6 +225,49 @@ class MainPanel {
         panelThree.add(dateEntryForAllBranches);
         panelThree.add(rentalReportAllBranchBtn);
         masterPanel.add(panelThree);
+
+        reserveBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String vehicleType = vehicle_type.getText();
+                int dlnum = Integer.parseInt(dlnumber.getText());
+                String toDate = to_date.getText();
+                String fromDate = from_date.getText();
+                String custName = cust_name.getText();
+                String custAddr = cust_addr.getText();
+                String custCity = cust_city.getText();
+                int cust_cellphone = Integer.parseInt(cellphone.getText());
+
+                rent.makeReservation(vehicleType, dlnum, toDate, fromDate, custName, custAddr, custCity, cust_cellphone);
+            }
+        });
+
+        viewVehiclesBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String vehicleType;
+                String location;
+                String toDate;
+                String fromDate;
+                vehicleType = vehicle_type2.getText();
+                location = location2.getText();
+                toDate = toDate2.getText();
+                fromDate = fromDate2.getText();
+                rent.viewVehicles(vehicleType, location, toDate, fromDate);
+            }
+        });
+
+        viewVehiclesBtnCount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String vehicleType;
+                String location;
+                String toDate;
+                String fromDate;
+                vehicleType = vehicle_type2.getText();
+                location = location2.getText();
+                toDate = toDate2.getText();
+                fromDate = fromDate2.getText();
+                rent.viewVehicleCount(vehicleType, location, toDate, fromDate);
+            }
+        });
 
         rentalReportAllBranchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
