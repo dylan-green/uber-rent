@@ -8,14 +8,14 @@ public class Reservation {
     private final int confnum;
     private final String vtname;
     private final int cust_dlnum;
-    private final Date fromDate;
-    private final Date toDate;
+    private final String fromDate;
+    private final String toDate;
 
     public Reservation(
             String vtname,
             int cust_dlnum,
-            Date fromDate,
-            Date toDate) {
+            String fromDate,
+            String toDate) {
         this.confnum = new Random().nextInt(10000);
         this.vtname = vtname;
         this.cust_dlnum = cust_dlnum;
@@ -35,11 +35,11 @@ public class Reservation {
 		return this.cust_dlnum;
 	}
 
-	public Date getFromDate() {
+	public String getFromDate() {
 		return this.fromDate;
 	}
 
-	public Date getToDate() {
+	public String getToDate() {
 		return this.toDate;
 	}
 

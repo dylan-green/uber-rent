@@ -275,15 +275,15 @@ public class DBConnectionHandler {
 		}
 	}
 
-	public void makeReservationTransaction(
+	public String makeReservationTransaction( // todo THROW error if desired vehicle not available
 		String res_vtname,
 		int dlnum,
-		Date res_to_date, 
-		Date res_from_date,
+		String res_to_date,
+		String res_from_date,
 		String cust_name,
 		String cust_addr,
 		String cust_city,
-		int cellphone) {
+		int cellphone) throws SQLException {
 			// check for vehicle availability
 			// If the customer’s desired vehicle is not available, an appropriate error message should be shown.
 			//  The database state should reflect this at the end of the action.
@@ -307,9 +307,16 @@ public class DBConnectionHandler {
 			} catch (SQLException e) {
 				System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 				rollbackConnection();
-			}	
-			insertReservation(new Reservation(res_vtname, dlnum, res_from_date, res_to_date));
-			// upon success show detail TODO
+			}
+			Reservation r = new Reservation(res_vtname, dlnum, res_from_date, res_to_date);
+			insertReservation(r);
+			StringBuilder receipt = new StringBuilder();
+			receipt.append("RESERVATION: Confirmation Number:" + r.getConfnum() + "\n");
+			receipt.append("To Date: " + r.getToDate() + "\n");
+			receipt.append("From Date: " + r.getFromDate() + "\n");
+			receipt.append("Vehicle Type: " + r.getVtname() + "\n");
+			receipt.append("Drivers License: " + r.getCustDlnum() + "\n");
+			return receipt.toString();
 	}
 
 	public void insertCustomer(Customer customer) {
@@ -333,12 +340,12 @@ public class DBConnectionHandler {
 
 	public void insertReservation(Reservation reservation) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,?,?)");
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation VALUES (?,?,?,TO_DATE(?,'DD/MM/YYYY'),TO_DATE(?,'DD/MM/YYYY'))");
 			ps.setInt(1, reservation.getConfnum());
 			ps.setString(2, reservation.getVtname());
 			ps.setInt(3, reservation.getCustDlnum());
-			ps.setDate(4, reservation.getFromDate());
-			ps.setDate(5, reservation.getToDate());
+			ps.setString(4, reservation.getFromDate());
+			ps.setString(5, reservation.getToDate());
 
 			ps.executeUpdate();
 			connection.commit();
