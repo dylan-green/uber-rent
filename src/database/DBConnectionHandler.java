@@ -372,10 +372,11 @@ public class DBConnectionHandler {
 		// }
 	}
 
-	public String availableVehicleTransaction(String vehicleType, String location, String toDate, String fromDate ) throws SQLException {
+	public String availableVehicleTransaction(String vehicleType, String location, String toDate, String fromDate, String flag) throws SQLException {
 		Statement stmt = null;
+		Statement stmt2 = null;
 		String query = "SELECT v.vid AS id, v.vlicense AS license, v.make AS make, v.model AS model, v.year AS year, v.color AS color, v.vstatus AS status, v.vtname AS name, v.b_location AS location, v.city AS city FROM vehicle v WHERE ";
-		String queryCount = "SELECT COUNT(v.vid) FROM vehicle v WHERE ";
+		String queryCount = "SELECT COUNT(v.vid) AS count FROM vehicle v WHERE ";
 		String queryRentedVehicles = "";
 		Boolean andRequired = false;
 		//String availableVehicleResults = "";
@@ -442,7 +443,28 @@ public class DBConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
-		return availableVehicleResults.toString();
+
+		StringBuilder availableVehicleCount = new StringBuilder();
+		availableVehicleCount.append("Number of available vehicles for Type: " + vehicleType + " Location: " + location +" toDate: " + toDate + " fromDate: " + fromDate + "\n");
+		try {
+			stmt2 = connection.createStatement();
+			System.out.print(queryCount);
+			ResultSet rs = stmt.executeQuery(queryCount);
+			while (rs.next()) {
+				availableVehicleCount.append(rs.getInt("count"));
+			};
+			
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+		if (flag.equals("count")) {
+			return availableVehicleCount.toString();
+		} else {
+			return availableVehicleResults.toString();
+		}
+		
 
 	}
 

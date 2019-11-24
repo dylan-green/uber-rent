@@ -39,7 +39,19 @@ public class URent {
 
     public void viewVehicles(String vehicleType, String location, String toDate, String fromDate) {
         try {
-            String results = dbHandler.availableVehicleTransaction(vehicleType, location, toDate, fromDate);
+            String results = dbHandler.availableVehicleTransaction(vehicleType, location, toDate, fromDate, "details");
+            JOptionPane.showMessageDialog(new JFrame(),  results, "Available Vehicles", JOptionPane.INFORMATION_MESSAGE);
+         } catch (SQLException e) {
+             JOptionPane.showMessageDialog(new JFrame(),
+                     "Error! Sorry something went wrong! \n" + e.toString(),
+                     "Oops!",
+                     JOptionPane.ERROR_MESSAGE);
+         }
+    }
+
+    public void viewVehicleCount(String vehicleType, String location, String toDate, String fromDate) {
+        try {
+            String results = dbHandler.availableVehicleTransaction(vehicleType, location, toDate, fromDate, "count");
             JOptionPane.showMessageDialog(new JFrame(),  results, "Available Vehicles", JOptionPane.INFORMATION_MESSAGE);
          } catch (SQLException e) {
              JOptionPane.showMessageDialog(new JFrame(),
@@ -113,7 +125,8 @@ class MainPanel {
     private JButton rentalReportAllBranchBtn = new JButton("Generate Daily Rental Report");
     private JButton rentalReportOneBranchBtn = new JButton("Generate Branch Daily Rental Report");
     private JButton reserveBtn = new JButton("Reserve");
-    private JButton viewVehiclesBtn = new JButton("View Available Vehicles");
+    private JButton viewVehiclesBtn = new JButton("View Available Vehicles (Details)");
+    private JButton viewVehiclesBtnCount = new JButton("View Available Vehicles (Count)");
     private JButton returnReportsBtn = new JButton("Return Report For Today");
     private JButton returnBtn = new JButton("Return");
     private JPanel panelTwo = new JPanel(new FlowLayout());
@@ -160,6 +173,7 @@ class MainPanel {
 
         panelOne.add(reserveBtn);
         panelTwo.add(viewVehiclesBtn);
+        panelTwo.add(viewVehiclesBtnCount);
 
         masterPanel.add(panelOne);
         masterPanel.add(panelTwo);
@@ -197,6 +211,20 @@ class MainPanel {
                 toDate = toDate2.getText();
                 fromDate = fromDate2.getText();
                 rent.viewVehicles(vehicleType, location, toDate, fromDate);
+            }
+        });
+
+        viewVehiclesBtnCount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                String vehicleType;
+                String location;
+                String toDate;
+                String fromDate;
+                vehicleType = vehicle_type2.getText();
+                location = location2.getText();
+                toDate = toDate2.getText();
+                fromDate = fromDate2.getText();
+                rent.viewVehicleCount(vehicleType, location, toDate, fromDate);
             }
         });
 
