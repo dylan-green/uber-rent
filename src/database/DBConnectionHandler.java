@@ -9,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Date;
 
 import model.ReportType;
@@ -133,8 +132,7 @@ public class DBConnectionHandler {
 			int cardNo,
 			int expDate,
 			String vtname,
-			int dlnum) {
-		try {
+			int dlnum) throws SQLException {
 			PreparedStatement stmt = connection
 					.prepareStatement("SELECT vid FROM vehicle WHERE vstatus='A' AND vtname=?");
 			stmt.setString(1, vtname);
@@ -161,14 +159,9 @@ public class DBConnectionHandler {
 			stmt.close();
 
 			return generateRentReceipt(rent, from, vid, dlnum);
-		} catch (SQLException e) {
-			rollbackConnection();
-			return EXCEPTION_TAG + " " + e.getMessage();
 		}
-	}
 
-	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) {
-		try {
+	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) throws SQLException{
 			PreparedStatement stmt = connection.prepareStatement("SELECT vid, dlnum, fromDate " +
 			"FROM reservation r, vehicle v " +
 					"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=?");
@@ -197,11 +190,7 @@ public class DBConnectionHandler {
 			stmt.close();
 
 			return generateRentReceipt(rent, from, vid, dlnum);
-		} catch (SQLException e) {
-			rollbackConnection();
-			return EXCEPTION_TAG + " " + e.getMessage();
 		}
-	}
 
 	public String returnRental(int rentId) throws SQLException{
 			PreparedStatement stmt = connection.prepareStatement("SELECT fromdate, confnum, day_rate, v.vid FROM rent r, vehicle v, vehicletype vt WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=?");
