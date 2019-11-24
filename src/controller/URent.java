@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class URent {
     private DBConnectionHandler dbHandler = null;
@@ -19,22 +20,51 @@ public class URent {
     }
 
     public void returnRental(int rentId) {
-        dbHandler.returnRental(rentId);
+        try {
+           String receipt = dbHandler.returnRental(rentId);
+           JOptionPane.showMessageDialog(new JFrame(),  receipt, "Receipt for Return", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReport(String date) {
-        Report report = dbHandler.generateRentalReport(date);
-        DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+        try {
+            Report report = dbHandler.generateRentalReport(date);
+            DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReportSingleBranch(String date, String branch) {
-        Report branchReport = dbHandler.generateRentalReportByBranch(branch, date);
-        DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
+        try {
+            Report branchReport = dbHandler.generateRentalReportByBranch(branch, date);
+            DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReturnsReport() {
-        Report returnsReport = dbHandler.generateReturnsReport();
-        DailyRentalReportUI returnReportUI = new DailyRentalReportUI(returnsReport);
+        try {
+            Report returnsReport = dbHandler.generateReturnsReport();
+            DailyRentalReportUI returnReportUI = new DailyRentalReportUI(returnsReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {

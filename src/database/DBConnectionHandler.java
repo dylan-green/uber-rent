@@ -65,8 +65,7 @@ public class DBConnectionHandler {
 		}
 	}
 
-	public void returnRental(int rentId) {
-		try {
+	public String returnRental(int rentId) throws SQLException {
 			String query =
 			"SELECT fromdate, confnum, day_rate "+
 			"FROM rent r, vehicle v, vehicletype vt "+
@@ -102,13 +101,13 @@ public class DBConnectionHandler {
 			receipt.append("	" + ret.getDays() + " DAYS * $" + rate + ".00 PER DAY\n");
 			receipt.append("	TOTAL: $" + ret.getValue() + ".00\n");
 
-			System.out.print(receipt.toString());
+			return receipt.toString();
 
-		} catch (SQLException e) {
-			// System.out.println("Could not find a rental with ID: " + rentId);
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
+//		} catch (SQLException e) {
+//			// System.out.println("Could not find a rental with ID: " + rentId);
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
 	}
 
 	public boolean login() {
@@ -128,8 +127,7 @@ public class DBConnectionHandler {
 	}
 
 	/** Generates Daily Rental Report (for all branches) **/
-	public Report generateRentalReport(String date) {
-            try {
+	public Report generateRentalReport(String date) throws SQLException {
             	// Create statements for all SQL Queries
 				PreparedStatement byBranchStm = connection.prepareStatement("select v.b_location as branch, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') group by v.b_location", ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);
@@ -171,10 +169,6 @@ public class DBConnectionHandler {
 				// create Report object to hold all the tables, and data
 				Report report = new Report(branchCarTable, branchTable, vTable, numRentals);
 				return report;
-			} catch (SQLException e) {
-				System.out.println(e);
-			}
-		return null;
 	}
 
 	private JTable getTotalsTable(ResultSet branchRes, String[] columns) throws SQLException {
@@ -270,8 +264,7 @@ public class DBConnectionHandler {
 	}
 
 	/** Generates Daily Rental Report (for ONE branches) **/
-    public Report generateRentalReportByBranch(String branch, String date) {
-		try {
+    public Report generateRentalReportByBranch(String branch, String date) throws SQLException {
 			PreparedStatement totalRentalsStm = connection.prepareStatement("select count(*) as count from rent r, vehicle v where r.vid = v.vid AND v.b_location = ? and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY')", ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
 			PreparedStatement byCarTypeStm = connection.prepareStatement("select v.vtname as cartype, COUNT(*) as numberOfRentals from rent r, vehicle v where r.vid = v.vid and r.FROMDATE = TO_DATE(?,'DD/MM/YYYY') and v.b_location = ? group by v.vtname", ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -306,14 +299,9 @@ public class DBConnectionHandler {
 
 			Report report = new Report(null, carTypeTable, vehicleTable, numRentals);
 			return report;
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-		return null;
 	}
 
-	public Report generateReturnsReport() {
-    	try {
+	public Report generateReturnsReport() throws SQLException {
 			PreparedStatement vehicleInfoStm = connection.prepareStatement(
 					"select v.b_location as branch, v.make, v.model, v.color, v.year, rr.RETURN_ID as return_id, rr.RETURN_DATE as return_date " +
 							"from RENT_RETURN rr, rent r, vehicle v " +
@@ -368,14 +356,5 @@ public class DBConnectionHandler {
 
 			Report returnsReport = new Report(returnByCarTable, byBranchRevTable, vInfoTable, totalRevenueValue);
 			return returnsReport;
-		} catch (SQLException e) {
-    		System.out.println(e);
-		}
-    	return null;
-	}
-
-	public Report generateReturnsReportOneBranch() {
-    	//todo stub
-		return null;
 	}
 }
