@@ -1,6 +1,7 @@
 package ui;
 
-import model.Report;
+import model.ReportModel;
+import model.ReportType;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,13 +22,19 @@ public class DailyRentalReportUI {
         }
     };
 
-    public DailyRentalReportUI(Report report) {
+    public DailyRentalReportUI(ReportModel report) {
         if (report.getByCarTypeTable() != null) {
             tabbedPane.addTab("Branch and Car Type", new JScrollPane(report.getByCarTypeTable()));
         }
         tabbedPane.addTab("Branch", new JScrollPane(report.getByBranchTable()));
         tabbedPane.addTab("Vehicle Details", new JScrollPane(report.getVTable()));
-        tabbedPane.addTab("Total Number of Rentals", new JScrollPane(new JLabel(report.getTotal()))); //TODO dynamically change tab name
+        String tabTitle = "";
+        if (report.getType() == ReportType.RENTALS) {
+            tabTitle = "Total Number of Rentals (Whole Company)";
+        } else {
+            tabTitle = "Total Revenue for Returns (Whole Company)";
+        }
+        tabbedPane.addTab(tabTitle, new JScrollPane(new JLabel(report.getTotal())));
         tabbedPane.setTabPlacement(JTabbedPane.TOP);
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

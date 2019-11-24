@@ -1,7 +1,7 @@
 package controller;
 
 import database.DBConnectionHandler;
-import model.Report;
+import model.ReportModel;
 import ui.DailyRentalReportUI;
 
 import javax.swing.*;
@@ -33,7 +33,7 @@ public class URent {
 
     public void generateDailyReport(String date) {
         try {
-            Report report = dbHandler.generateRentalReport(date);
+            ReportModel report = dbHandler.generateRentalReport(date);
             DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(new JFrame(),
@@ -45,7 +45,7 @@ public class URent {
 
     public void generateDailyReportSingleBranch(String date, String branch) {
         try {
-            Report branchReport = dbHandler.generateRentalReportByBranch(branch, date);
+            ReportModel branchReport = dbHandler.generateRentalReportByBranch(branch, date);
             DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(new JFrame(),
@@ -57,7 +57,7 @@ public class URent {
 
     public void generateDailyReturnsReport() {
         try {
-            Report returnsReport = dbHandler.generateReturnsReport();
+            ReportModel returnsReport = dbHandler.generateReturnsReport();
             DailyRentalReportUI returnReportUI = new DailyRentalReportUI(returnsReport);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(new JFrame(),
