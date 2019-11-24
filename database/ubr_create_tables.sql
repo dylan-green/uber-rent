@@ -54,7 +54,6 @@ CREATE TABLE rent (
     expDate INTEGER NOT NULL,
     confnum INTEGER,
     FOREIGN KEY (vid) REFERENCES vehicle,
-    FOREIGN KEY (dlnum) REFERENCES customer,
     FOREIGN KEY (confnum) REFERENCES reservation
 );
 

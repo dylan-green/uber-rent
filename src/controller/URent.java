@@ -18,6 +18,20 @@ public class URent {
         System.out.println(dbHandler);
     }
 
+    public void rentVehicle(
+            int confnum,
+            String cardname,
+            int cardNo,
+            int expDate,
+            String vtname,
+            int dlnum) {
+        String receipt = confnum == 0
+                ? dbHandler.rentWithoutReso(cardname, cardNo, expDate, vtname, dlnum)
+                : dbHandler.rentWithReso(confnum, cardname, cardNo, expDate);
+
+        System.out.print(receipt);
+    }
+
     public void returnRental(int rentId) {
         String receipt = dbHandler.returnRental(rentId);
         System.out.print(receipt);

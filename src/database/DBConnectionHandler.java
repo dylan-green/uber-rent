@@ -85,7 +85,11 @@ public class DBConnectionHandler {
 			ps.setString(6, cardname);
 			ps.setInt(7, cardNo);
 			ps.setInt(8, expDate);
-			ps.setInt(9, confnum);
+			if(confnum == 0) {
+				ps.setNull(9, java.sql.Types.INTEGER);
+			} else {
+				ps.setInt(9, confnum);
+			}
 			ps.executeUpdate();
 			ps.close();
 			return true;
@@ -124,20 +128,21 @@ public class DBConnectionHandler {
 		return receipt.toString();
 	}
 
-	public String rentWithoutReservation(
+	public String rentWithoutReso(
 			String cardname,
 			int cardNo,
 			int expDate,
 			String vtname,
 			int dlnum) {
 		try {
-			String query = "SELECT vid " + "FROM vehicle v " + "WHERE v.vstatus='A' AND v.vtname=" + vtname;
-
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			PreparedStatement stmt = connection
+					.prepareStatement("SELECT vid FROM vehicle WHERE vstatus='A' AND vtname=?");
+			stmt.setString(1, vtname);
+			
+			ResultSet rs = stmt.executeQuery();
 
 			if (!rs.next()) {
-				throw new SQLException("No available vehicles found.");
+				throw new SQLException("No available vehicles found\n");
 			}
 
 			int vid = rs.getInt("vid");
@@ -145,11 +150,11 @@ public class DBConnectionHandler {
 			RentModel rent = new RentModel(vid, dlnum, from);
 
 			if (!insertRental(rent, cardname, cardNo, expDate, 0)) {
-				throw new SQLException("There was a problem creating this rental");
+				throw new SQLException("There was a problem creating this rental\n");
 			}
 
 			if (!setVehicleStatus(vid, "N")) {
-				throw new SQLException("Vehicle " + vid + " is not available");
+				throw new SQLException("Vehicle " + vid + " is not available\n");
 			}
 
 			connection.commit();
@@ -162,18 +167,17 @@ public class DBConnectionHandler {
 		}
 	}
 
-	public String rentWithReservation(int confnum, String cardname, int cardNo, int expDate) {
+	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) {
 		try {
-			String query = 
-			"SELECT vid, dlnum, fromDate " +  
+			PreparedStatement stmt = connection.prepareStatement("SELECT vid, dlnum, fromDate " +  
 			"FROM reservation r, vehicle v " +
-			"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=" + confnum;
+					"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=?");
+			stmt.setInt(1, confnum);
 			
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt.executeQuery();
 
 			if (!rs.next()) {
-				throw new SQLException("No available vehicles found");
+				throw new SQLException("No available vehicles found\n");
 			}
 
 			int vid = rs.getInt("vid");
@@ -182,11 +186,11 @@ public class DBConnectionHandler {
 			RentModel rent = new RentModel(vid, dlnum, from);
 
 			if (!insertRental(rent, cardname, cardNo, expDate, confnum)) {
-				throw new SQLException("There was a problem creating this rental");
+				throw new SQLException("There was a problem creating this rental\n");
 			}
 
 			if (!setVehicleStatus(vid, "N")) {
-				throw new SQLException("Vehicle " + vid + " is not available");
+				throw new SQLException("Vehicle " + vid + " is not available\n");
 			}
 
 			connection.commit();
@@ -201,13 +205,10 @@ public class DBConnectionHandler {
 
 	public String returnRental(int rentId) {
 		try {
-			String query =
-			"SELECT fromdate, confnum, day_rate, v.vid "+
-			"FROM rent r, vehicle v, vehicletype vt "+
-			"WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=" + rentId;
+			PreparedStatement stmt = connection.prepareStatement("SELECT fromdate, confnum, day_rate, v.vid FROM rent r, vehicle v, vehicletype vt WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=?");
 			
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			stmt.setInt(1, rentId);
+			ResultSet rs = stmt.executeQuery();
  
 			if (!rs.next()) {
 				throw new SQLException("No rental found with ID " + rentId);
