@@ -74,16 +74,155 @@ public class DBConnectionHandler {
 		}
 	}
 
-	public void returnRental(int rentId) {
+	/** Shared between both versions of rent
+	 * 	rentWithReservation / rentWithoutReservation */
+	private boolean insertRental(
+			RentModel rent,
+			String cardname,
+			int cardNo,
+			int expDate,
+			int confnum) {
 		try {
-			String query =
-			"SELECT fromdate, confnum, day_rate "+
-			"FROM rent r, vehicle v, vehicletype vt "+
-			"WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=" + rentId;
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			/* Add the rental to the RENT table */
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO rent VALUES (?,?,?,?,?,?,?,?,?)");
+			ps.setInt(1, rent.getRentId());
+			ps.setInt(2, rent.getVid());
+			ps.setInt(3, rent.getDlnum());
+			ps.setDate(4, rent.getFrom());
+			ps.setDate(5, null);
+			ps.setString(6, cardname);
+			ps.setInt(7, cardNo);
+			ps.setInt(8, expDate);
+			if(confnum == 0) {
+				ps.setNull(9, java.sql.Types.INTEGER);
+			} else {
+				ps.setInt(9, confnum);
+			}
+			ps.executeUpdate();
+			ps.close();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+	}
 
-			rs.next();
+	/** set status in vehicles table for v.vid/status */
+	private boolean setVehicleStatus(int vid, String status) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
+			ps.setString(1, status);
+			ps.setInt(2, vid);
+			ps.executeUpdate();
+			ps.close();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+	}
+	
+	/** receipts specifically for rent with/without reservations */
+	private String generateRentReceipt(RentModel rent, Date from, int vid, int dlnum) {
+		/* Put together a receipt of the necessary information */
+		StringBuilder receipt = new StringBuilder();
+		receipt.append("CONFIRMING RENTAL " + rent.getRentId() + "\n");
+		receipt.append("Date: " + from + "\n");
+		receipt.append("Vehicle ID: " + vid + "\n");
+		receipt.append("Driver: " + dlnum + "\n");
+
+		return receipt.toString();
+	}
+
+	public String rentWithoutReso(
+			String cardname,
+			int cardNo,
+			int expDate,
+			String vtname,
+			int dlnum) {
+		try {
+			PreparedStatement stmt = connection
+					.prepareStatement("SELECT vid FROM vehicle WHERE vstatus='A' AND vtname=?");
+			stmt.setString(1, vtname);
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (!rs.next()) {
+				throw new SQLException("No available vehicles found\n");
+			}
+
+			int vid = rs.getInt("vid");
+			Date from = new Date(System.currentTimeMillis());
+			RentModel rent = new RentModel(vid, dlnum, from);
+
+			if (!insertRental(rent, cardname, cardNo, expDate, 0)) {
+				throw new SQLException("There was a problem creating this rental\n");
+			}
+
+			if (!setVehicleStatus(vid, "N")) {
+				throw new SQLException("Vehicle " + vid + " is not available\n");
+			}
+
+			connection.commit();
+			stmt.close();
+
+			return generateRentReceipt(rent, from, vid, dlnum);
+		} catch (SQLException e) {
+			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
+		}
+	}
+
+	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT vid, dlnum, fromDate " +  
+			"FROM reservation r, vehicle v " +
+					"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=?");
+			stmt.setInt(1, confnum);
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if (!rs.next()) {
+				throw new SQLException("No available vehicles found\n");
+			}
+
+			int vid = rs.getInt("vid");
+			int dlnum = rs.getInt("dlnum");
+			Date from = rs.getDate("fromdate");
+			RentModel rent = new RentModel(vid, dlnum, from);
+
+			if (!insertRental(rent, cardname, cardNo, expDate, confnum)) {
+				throw new SQLException("There was a problem creating this rental\n");
+			}
+
+			if (!setVehicleStatus(vid, "N")) {
+				throw new SQLException("Vehicle " + vid + " is not available\n");
+			}
+
+			connection.commit();
+			stmt.close();
+
+			return generateRentReceipt(rent, from, vid, dlnum);
+		} catch (SQLException e) {
+			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
+		}
+	}
+
+	public String returnRental(int rentId) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT fromdate, confnum, day_rate, v.vid FROM rent r, vehicle v, vehicletype vt WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=?");
+			
+			stmt.setInt(1, rentId);
+			ResultSet rs = stmt.executeQuery();
+ 
+			if (!rs.next()) {
+				throw new SQLException("No rental found with ID " + rentId);
+			}
+
+			int vid = rs.getInt("vid");
 			Date from = rs.getDate("fromdate");
 			Date to = new Date(System.currentTimeMillis());
 
@@ -91,32 +230,39 @@ public class DBConnectionHandler {
 			int confnum = rs.getInt("confnum");
 			ReturnModel ret = new ReturnModel(rentId, from, to, rate);
 
+			/* Inserting the new entry into the rent_return table */
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO rent_return VALUES (?,?,?)");
 			ps.setInt(1, ret.getReturnId());
 			ps.setDate(2, ret.getToDate());
 			ps.setLong(3, ret.getValue());
-
 			ps.executeUpdate();
-			connection.commit();
 
+			/* Updating the vehicle to set the status as Available */
+			ps = connection.prepareStatement("UPDATE vehicle SET vstatus = ? WHERE vid = ?");
+			ps.setString(1, "A");
+			ps.setInt(2, vid);
+			ps.executeUpdate();
+
+			connection.commit();
 			ps.close();
 			stmt.close();
 
+			/* Put together a receipt of the relevant information */
 			StringBuilder receipt = new StringBuilder();
 			receipt.append("RETURNING RENTAL " + rentId + "\n");
 			if (confnum != 0) {
-				receipt.append("	RESERVATION: " + confnum + "\n");
+				receipt.append("Reservation #: " + confnum + "\n");
 			}
-			receipt.append("	DATE: " + to + "\n");
-			receipt.append("	" + ret.getDays() + " DAYS * $" + rate + ".00 PER DAY\n");
-			receipt.append("	TOTAL: $" + ret.getValue() + ".00\n");
+			receipt.append("Date: " + to + "\n");
+			receipt.append(ret.getDays() + " Days * $" + rate + ".00 PER DAY\n");
+			receipt.append("Total: $" + ret.getValue() + ".00\n");
 
-			System.out.print(receipt.toString());
-
+			return receipt.toString();
+			// System.out.print(receipt.toString());
 		} catch (SQLException e) {
-			// System.out.println("Could not find a rental with ID: " + rentId);
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
+			return EXCEPTION_TAG + " " + e.getMessage();
+			// System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
 
@@ -125,7 +271,7 @@ public class DBConnectionHandler {
 			if (connection != null) {
 				connection.close();
 			}
-
+			System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
 			connection = DriverManager.getConnection(ORACLE_URL, "ora_sstarke", "a20448122");
 			connection.setAutoCommit(false);
 
