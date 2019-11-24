@@ -30,9 +30,9 @@ public class DailyRentalReportUI {
         tabbedPane.addTab("Vehicle Details", new JScrollPane(report.getVTable()));
         String tabTitle = "";
         if (report.getType() == ReportType.RENTALS) {
-            tabTitle = "Total Number of Rentals (Whole Company)";
+            tabTitle = "Total Number of Rentals";
         } else {
-            tabTitle = "Total Revenue for Returns (Whole Company)";
+            tabTitle = "Total Revenue for Returns";
         }
         tabbedPane.addTab(tabTitle, new JScrollPane(new JLabel(report.getTotal())));
         tabbedPane.setTabPlacement(JTabbedPane.TOP);

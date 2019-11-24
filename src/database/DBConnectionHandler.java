@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.time.temporal.ChronoUnit;
+import java.sql.*;
 
 import model.ReportType;
 import model.ReturnModel;
@@ -141,8 +142,7 @@ public class DBConnectionHandler {
 			int cardNo,
 			int expDate,
 			String vtname,
-			int dlnum) {
-		try {
+			int dlnum) throws SQLException {
 			PreparedStatement stmt = connection
 					.prepareStatement("SELECT vid FROM vehicle WHERE vstatus='A' AND vtname=?");
 			stmt.setString(1, vtname);
@@ -169,14 +169,9 @@ public class DBConnectionHandler {
 			stmt.close();
 
 			return generateRentReceipt(rent, from, vid, dlnum);
-		} catch (SQLException e) {
-			rollbackConnection();
-			return EXCEPTION_TAG + " " + e.getMessage();
 		}
-	}
 
-	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) {
-		try {
+	public String rentWithReso(int confnum, String cardname, int cardNo, int expDate) throws SQLException{
 			PreparedStatement stmt = connection.prepareStatement("SELECT vid, dlnum, fromDate " +
 			"FROM reservation r, vehicle v " +
 					"WHERE r.vtname=v.vtname AND v.vstatus='A' AND r.confnum=?");
@@ -205,11 +200,7 @@ public class DBConnectionHandler {
 			stmt.close();
 
 			return generateRentReceipt(rent, from, vid, dlnum);
-		} catch (SQLException e) {
-			rollbackConnection();
-			return EXCEPTION_TAG + " " + e.getMessage();
 		}
-	}
 
 	public String returnRental(int rentId) throws SQLException{
 			PreparedStatement stmt = connection.prepareStatement("SELECT fromdate, confnum, day_rate, v.vid FROM rent r, vehicle v, vehicletype vt WHERE r.vid=v.vid AND v.vtname=vt.vtname AND r.rent_id=?");
@@ -713,5 +704,45 @@ public class DBConnectionHandler {
 
 			ReportModel returnsReport = new ReportModel(returnByCarTable, byBranchRevTable, vInfoTable, totalRevenueValue, ReportType.RETURN);
 			return returnsReport;
+	}
+
+	public ReportModel generateReportForBranch(String location) throws SQLException{
+		PreparedStatement vehicleDetailsStm = connection.prepareStatement(
+				"select v.vtname as carType, v.make, v.model, v.color, v.year, rr.RETURN_ID as return_id, rr.RETURN_DATE as return_date from RENT_RETURN rr, rent r, vehicle v where rr.RETURN_ID = r.RENT_ID and r.VID = v.VID and v.B_LOCATION = ? order by v.VTNAME",
+				ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY
+
+		);
+
+		vehicleDetailsStm.setString(1, location);
+		ResultSet vInfo = vehicleDetailsStm.executeQuery();
+		String vCols[] = {"carType", "make", "model", "color", "year", "return_id", "return_date"};
+		JTable vehicleInfoTable = getVTable(vInfo, vCols);
+
+		PreparedStatement revByCarTypeStm = connection.prepareStatement(
+				"select v.VTNAME as carType, count(v.vid) as num_returns, sum(rr.RETURN_VALUE) as revenue from RENT_RETURN rr, rent r, vehicle v\n" +
+						"where rr.RETURN_ID = r.RENT_ID and r.VID = v.VID and v.B_LOCATION = ? group by v.VTNAME",
+				ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY
+		);
+		revByCarTypeStm.setString(1, location);
+		ResultSet revByCarType = revByCarTypeStm.executeQuery();
+		String retCols[] = {"carType", "num_returns", "revenue"};
+		JTable revByCarTable = byBranchTable(revByCarType, retCols);
+
+		PreparedStatement revStm = connection.prepareStatement("select sum(rr.RETURN_VALUE) as totalRevenue from RENT_RETURN rr, rent r, vehicle v\n" +
+						"where rr.RETURN_ID = r.RENT_ID and r.VID = v.VID and v.B_LOCATION = ?",
+				ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY
+		);
+		revStm.setString(1, location);
+		ResultSet revAtBranch = revStm.executeQuery();
+		String totalRevenueValue = "";
+		while (revAtBranch.next()) {
+			totalRevenueValue = String.valueOf(revAtBranch.getString("totalRevenue"));
+		}
+
+		ReportModel oneBranchReturnsReport = new ReportModel(null, revByCarTable, vehicleInfoTable, totalRevenueValue, ReportType.RETURN);
+		return oneBranchReturnsReport;
 	}
 }

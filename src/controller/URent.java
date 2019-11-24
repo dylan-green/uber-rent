@@ -73,6 +73,30 @@ public class URent {
         }
     }
 
+    public void rentWithReso(int confnum, String cardname, int cardNo, int expDate) {
+        try {
+            String rentReceipt = dbHandler.rentWithReso(confnum, cardname, cardNo, expDate);
+            JOptionPane.showMessageDialog(new JFrame(),  rentReceipt, "Receipt for Rental", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void rentWithoutReso(String cardname,  int cardNo, int expDate, String vtname, int dlnum) {
+        try {
+            String rentalReceipt = dbHandler.rentWithoutReso(cardname, cardNo, expDate, vtname, dlnum);
+            JOptionPane.showMessageDialog(new JFrame(), rentalReceipt, "Receipt for Rental", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public void generateDailyReport(String date) {
         try {
             ReportModel report = dbHandler.generateRentalReport(date);
@@ -109,6 +133,18 @@ public class URent {
         }
     }
 
+    public void generateReturnSingleBranchReport(String location) {
+        try {
+            ReportModel returnBranchReport = dbHandler.generateReportForBranch(location);
+            DailyRentalReportUI branchReportUI = new DailyRentalReportUI(returnBranchReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
@@ -128,18 +164,23 @@ class MainPanel {
     private JButton viewVehiclesBtn = new JButton("View Available Vehicles (Details)");
     private JButton viewVehiclesBtnCount = new JButton("View Available Vehicles (Count)");
     private JButton returnReportsBtn = new JButton("Return Report For Today");
+    private JButton returnReportOneBranchBtn = new JButton("Return Report for Branch");
     private JButton returnBtn = new JButton("Return");
+    private JButton rentWithResoBtn = new JButton("Rent w/ Reservation");
+    private JButton rentWithoutResoBtn = new JButton("Rent w/o Reservation");
     private JPanel panelTwo = new JPanel(new FlowLayout());
     private JPanel panelOne = new JPanel(new FlowLayout());
     private JPanel panelThree = new JPanel(new FlowLayout());
     private JPanel panelFour = new JPanel(new FlowLayout());
     private JPanel panelFive = new JPanel(new FlowLayout());
     private JPanel panelSix = new JPanel(new FlowLayout());
+    private JPanel panelSeven = new JPanel(new FlowLayout());
+    private JPanel panelEight = new JPanel(new FlowLayout());
 
 
     public MainPanel(URent rent) {
         JPanel masterPanel = new JPanel();
-        masterPanel.setLayout(new GridLayout(3,3));
+        masterPanel.setLayout(new GridLayout(4,4));
 
         JTextField vehicle_type2, location2, toDate2, fromDate2;
         vehicle_type2 = new JTextField("Vehicle type");
@@ -263,7 +304,9 @@ class MainPanel {
         });
         panelFive.add(returnBtn);
         masterPanel.add(panelFive);
-
+        JTextField branchForReturnReportField = new JTextField("Branch for Returns Report");
+        panelSix.add(branchForReturnReportField);
+        panelSix.add(returnReportOneBranchBtn);
         panelSix.add(returnReportsBtn);
         returnReportsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -272,8 +315,67 @@ class MainPanel {
         });
         masterPanel.add(panelSix);
 
+        returnReportOneBranchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String location = branchForReturnReportField.getText();
+                rent.generateReturnSingleBranchReport(location);
+            }
+        });
+
+        JTextField confNumField, cardNameField, cardNoField, expDateField;
+        confNumField = new JTextField("Confirmation Number");
+        cardNoField = new JTextField("Credit Card Number (No Spaces)");
+        cardNameField = new JTextField("Card name (e.g. MasterCard/Visa)");
+        expDateField = new JTextField("Expiry Date (MMYY)");
+        panelSeven.add(confNumField);
+        panelSeven.add(cardNoField);
+        panelSeven.add(cardNameField);
+        panelSeven.add(expDateField);
+        panelSeven.add(rentWithResoBtn);
+
+        rentWithResoBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confNum = Integer.parseInt(confNumField.getText());
+                String cardName = cardNameField.getText();
+                int cardNo = Integer.parseInt(cardNoField.getText());
+                int expDate = Integer.parseInt(expDateField.getText());
+                rent.rentWithReso(confNum, cardName, cardNo, expDate);
+            }
+        });
+        masterPanel.add(panelSeven);
+
+
+
+        JTextField ccNameField, ccNoField, ccExpiryField, typeField, licenseField;
+        licenseField = new JTextField("Driver's License #");
+        ccNoField = new JTextField("Credit Card Number (No Spaces)");
+        ccNameField = new JTextField("Card name (e.g. MasterCard/Visa)");
+        ccExpiryField = new JTextField("Expiry Date (MMYY)");
+        typeField = new JTextField("Vehicle Type");
+        panelEight.add(licenseField);
+        panelEight.add(ccNoField);
+        panelEight.add(ccNameField);
+        panelEight.add(ccExpiryField);
+        panelEight.add(typeField);
+        panelEight.add(rentWithoutResoBtn);
+
+        rentWithoutResoBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int dlnum = Integer.parseInt(licenseField.getText());
+                String cardName = ccNameField.getText();
+                int cardNo = Integer.parseInt(ccNoField.getText());
+                int expDate = Integer.parseInt(ccExpiryField.getText());
+                String vtname = typeField.getText();
+                rent.rentWithoutReso(cardName, cardNo, expDate, vtname, dlnum);
+            }
+        });
+        masterPanel.add(panelEight);
+
         f.add(masterPanel);
-        f.setSize(800,300);
+        f.setSize(800,500);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
