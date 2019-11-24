@@ -5,16 +5,16 @@ import java.text.SimpleDateFormat;
 import java.sql.Date;
 
 import database.DBConnectionHandler;
-import model.Report;
+import model.ReportModel;
 import ui.DailyRentalReportUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import model.Customer;
 import model.Reservation;
+import java.sql.SQLException;
 
 public class URent {
     private DBConnectionHandler dbHandler = null;
@@ -24,38 +24,52 @@ public class URent {
         System.out.println(dbHandler);
     }
 
-    public void rentVehicle(
-            int confnum,
-            String cardname,
-            int cardNo,
-            int expDate,
-            String vtname,
-            int dlnum) {
-        String receipt = confnum == 0
-                ? dbHandler.rentWithoutReso(cardname, cardNo, expDate, vtname, dlnum)
-                : dbHandler.rentWithReso(confnum, cardname, cardNo, expDate);
-
-        System.out.print(receipt);
-    }
-
     public void returnRental(int rentId) {
-        String receipt = dbHandler.returnRental(rentId);
-        System.out.print(receipt);
+        try {
+           String receipt = dbHandler.returnRental(rentId);
+           JOptionPane.showMessageDialog(new JFrame(),  receipt, "Receipt for Return", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReport(String date) {
-        Report report = dbHandler.generateRentalReport(date);
-        DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+        try {
+            ReportModel report = dbHandler.generateRentalReport(date);
+            DailyRentalReportUI dailyRentalReportUI = new DailyRentalReportUI(report);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReportSingleBranch(String date, String branch) {
-        Report branchReport = dbHandler.generateRentalReportByBranch(branch, date);
-        DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
+        try {
+            ReportModel branchReport = dbHandler.generateRentalReportByBranch(branch, date);
+            DailyRentalReportUI branchReportUI = new DailyRentalReportUI(branchReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void generateDailyReturnsReport() {
-        Report returnsReport = dbHandler.generateReturnsReport();
-        DailyRentalReportUI returnReportUI = new DailyRentalReportUI(returnsReport);
+        try {
+            ReportModel returnsReport = dbHandler.generateReturnsReport();
+            DailyRentalReportUI returnReportUI = new DailyRentalReportUI(returnsReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {
@@ -81,16 +95,26 @@ class MainPanel {
     private JPanel panelOne = new JPanel(new FlowLayout());
     private JPanel panelThree = new JPanel(new FlowLayout());
     private JPanel panelFour = new JPanel(new FlowLayout());
+    private JPanel panelFive = new JPanel(new FlowLayout());
+    private JPanel panelSix = new JPanel(new FlowLayout());
 
 
     public MainPanel(URent rent) {
-        panelOne.setBorder(new EmptyBorder(2,3,2,3));
-        panelOne.add(rentalReportAllBranchBtn);
+        JPanel masterPanel = new JPanel();
+        masterPanel.setLayout(new GridLayout(3,3));
+
+        panelOne.add(reserveBtn);
+        panelTwo.add(viewVehiclesBtn);
+
+        masterPanel.add(panelOne);
+        masterPanel.add(panelTwo);
+
         JTextField dateEntryForAllBranches;
         dateEntryForAllBranches = new JTextField("Date For All Branches");
-        dateEntryForAllBranches.setBounds(100,100,300,50); // TODO fix textfield size
-        panelOne.add(dateEntryForAllBranches);
-        f.add(panelOne, BorderLayout.NORTH);
+        dateEntryForAllBranches.setBounds(100,100,300,50);
+        panelThree.add(dateEntryForAllBranches);
+        panelThree.add(rentalReportAllBranchBtn);
+        masterPanel.add(panelThree);
 
         rentalReportAllBranchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -100,13 +124,13 @@ class MainPanel {
             }
         });
 
-        panelTwo.add(rentalReportOneBranchBtn);
         JTextField dateForOneBranchField, branchField;
         dateForOneBranchField = new JTextField("Date For One Branch");
         branchField = new JTextField("Branch for Single Branch Report");
-        panelTwo.add(dateForOneBranchField);
-        panelTwo.add(branchField);
-        f.add(panelTwo, BorderLayout.SOUTH);
+        panelFour.add(dateForOneBranchField);
+        panelFour.add(branchField);
+        panelFour.add(rentalReportOneBranchBtn);
+        masterPanel.add(panelFour);
 
 
         rentalReportOneBranchBtn.addActionListener(new ActionListener() {
@@ -118,25 +142,26 @@ class MainPanel {
         });
 
         JTextField rentIdField = new JTextField("Rent ID for Return");
-        panelThree.add(returnBtn);
-        panelThree.add(rentIdField);
+        panelFive.add(rentIdField);
         returnBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int rentId = Integer.parseInt(rentIdField.getText());
                 rent.returnRental(rentId);
             }
         });
-        f.add(panelThree, BorderLayout.CENTER);
+        panelFive.add(returnBtn);
+        masterPanel.add(panelFive);
 
-        panelFour.add(returnReportsBtn);
+        panelSix.add(returnReportsBtn);
         returnReportsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 rent.generateDailyReturnsReport();
             }
         });
-        f.add(panelFour, BorderLayout.EAST);
+        masterPanel.add(panelSix);
 
-        f.setSize(800,500);
+        f.add(masterPanel);
+        f.setSize(800,300);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
