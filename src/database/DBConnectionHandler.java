@@ -373,13 +373,13 @@ public class DBConnectionHandler {
 		//String availableVehicleResults = "";
 
 		// if vehicleType passed in then add to query
-		if (!vehicleType.equals("Vehicle type")) {
+		if (!vehicleType.equals("")) {
 			query = query + "v.vtname = '" + vehicleType + "' ";
 			queryCount = queryCount + "v.vtname = '" + vehicleType + "' ";
 			andRequired = true;
 		}
 		// if location passed in then add to query
-		if (!location.equals("Location")) {
+		if (!location.equals("")) {
 			if (andRequired) {
 				query = query + "AND ";
 				queryCount = queryCount + "AND ";
@@ -390,7 +390,7 @@ public class DBConnectionHandler {
 		}
 
 		// if date exists, construct query that will get all the vehicles rented in this time period
-		if (!toDate.equals("To Date") && !fromDate.equals("From Date")) {
+		if (!toDate.equals("") && !fromDate.equals("")) {
 			if (andRequired) {
 				query = query + "AND ";
 				queryCount = queryCount + "AND ";
