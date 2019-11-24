@@ -90,6 +90,18 @@ public class URent {
         }
     }
 
+    public void generateReturnSingleBranchReport(String location) {
+        try {
+            ReportModel returnBranchReport = dbHandler.generateReportForBranch(location);
+            DailyRentalReportUI branchReportUI = new DailyRentalReportUI(returnBranchReport);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Error! Sorry something went wrong! \n" + e.toString(),
+                    "Oops!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
@@ -108,6 +120,7 @@ class MainPanel {
     private JButton reserveBtn = new JButton("Reserve");
     private JButton viewVehiclesBtn = new JButton("View Available Vehicles");
     private JButton returnReportsBtn = new JButton("Return Report For Today");
+    private JButton returnReportOneBranchBtn = new JButton("Return Report for Branch");
     private JButton returnBtn = new JButton("Return");
     private JButton rentWithResoBtn = new JButton("Rent w/ Reservation");
     private JButton rentWithoutResoBtn = new JButton("Rent w/o Reservation");
@@ -173,7 +186,9 @@ class MainPanel {
         });
         panelFive.add(returnBtn);
         masterPanel.add(panelFive);
-
+        JTextField branchForReturnReportField = new JTextField("Branch for Returns Report");
+        panelSix.add(branchForReturnReportField);
+        panelSix.add(returnReportOneBranchBtn);
         panelSix.add(returnReportsBtn);
         returnReportsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -181,6 +196,14 @@ class MainPanel {
             }
         });
         masterPanel.add(panelSix);
+
+        returnReportOneBranchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String location = branchForReturnReportField.getText();
+                rent.generateReturnSingleBranchReport(location);
+            }
+        });
 
         JTextField confNumField, cardNameField, cardNoField, expDateField;
         confNumField = new JTextField("Confirmation Number");
