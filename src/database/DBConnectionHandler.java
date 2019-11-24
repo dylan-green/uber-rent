@@ -263,8 +263,8 @@ public class DBConnectionHandler {
 			if (connection != null) {
 				connection.close();
 			}
-			// System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
-			connection = DriverManager.getConnection(ORACLE_URL, "ora_gdylan", "a52143104");
+			System.out.println("ERROR: missing sqlplus credentials in DBConnectionHandler.login()");
+			connection = DriverManager.getConnection(ORACLE_URL, "", "");
 			connection.setAutoCommit(false);
 
 			return true;
