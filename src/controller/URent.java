@@ -5,7 +5,6 @@ import model.ReportModel;
 import ui.DailyRentalReportUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -106,10 +105,9 @@ class MainPanel {
 
         JTextField dateEntryForAllBranches;
         dateEntryForAllBranches = new JTextField("Date For All Branches");
-        dateEntryForAllBranches.setBounds(100,100,300,50); // TODO fix textfield size
+        dateEntryForAllBranches.setBounds(100,100,300,50);
         panelThree.add(dateEntryForAllBranches);
         panelThree.add(rentalReportAllBranchBtn);
-//        f.add(panelOne, BorderLayout.NORTH);
         masterPanel.add(panelThree);
 
         rentalReportAllBranchBtn.addActionListener(new ActionListener() {
@@ -126,7 +124,6 @@ class MainPanel {
         panelFour.add(dateForOneBranchField);
         panelFour.add(branchField);
         panelFour.add(rentalReportOneBranchBtn);
-//        f.add(panelTwo, BorderLayout.SOUTH);
         masterPanel.add(panelFour);
 
 
@@ -147,7 +144,6 @@ class MainPanel {
             }
         });
         panelFive.add(returnBtn);
-//        f.add(panelThree, BorderLayout.CENTER);
         masterPanel.add(panelFive);
 
         panelSix.add(returnReportsBtn);
@@ -156,7 +152,6 @@ class MainPanel {
                 rent.generateDailyReturnsReport();
             }
         });
-//        f.add(panelFour, BorderLayout.EAST);
         masterPanel.add(panelSix);
 
         f.add(masterPanel);

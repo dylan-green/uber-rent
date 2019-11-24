@@ -3,43 +3,23 @@ package model;
 import java.sql.Date;
 
 public class RentModel {
-    private static int rentIdCounter = 1;
-
-    private final int rentId;
     private final int vid;
-    private final int dlnum;
-    private final Date fromDate;
-    private Date toDate;
-    private final int odometer;
-    private final String cardname;
-    private final int cardNo;
-    private final int expDate;
-    private final int confnum;
+	private final int dlnum;
+    private 	  Date to;
+    private final Date from;
+	private final int rentId;
 
     public RentModel(
         int vid,
         int dlnum,
-        Date fromDate,
-        int odometer,
-        String cardname,
-        int cardNo,
-        int expDate
+        Date from
         ) {
-        this.rentId = rentIdCounter++;
         this.vid = vid;
         this.dlnum = dlnum;
-        this.fromDate = fromDate;
-        this.toDate = null;
-        this.odometer = odometer;
-        this.cardname = cardname;
-        this.cardNo = cardNo;
-        this.expDate = expDate;
-        this.confnum = (int)Math.random() % 1000000;
+		this.to = null;
+		this.from = from;
+		this.rentId = dlnum + vid;
     }
-
-	public int getRentId() {
-		return rentId;
-	}
 
 	public int getVid() {
 		return vid;
@@ -49,36 +29,19 @@ public class RentModel {
 		return dlnum;
 	}
 
-	public Date getFromDate() {
-		return fromDate;
+	public Date getFrom() {
+		return from;
 	}
 
-	public Date getToDate() {
-		return toDate;
+	public int getRentId() {
+		return rentId;
 	}
 
-	public void setToDate(Date toDate) {
-		this.toDate = toDate;
+	public Date getTo() {
+		return to;
 	}
 
-	public int getOdometer() {
-		return odometer;
+	public void setTo(Date to) {
+		this.to = to;
 	}
-
-	public String getCardname() {
-		return cardname;
-	}
-
-	public int getCardNo() {
-		return cardNo;
-	}
-
-	public int getExpDate() {
-		return expDate;
-	}
-
-	public int getConfnum() {
-		return confnum;
-	}
-
 }

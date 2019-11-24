@@ -15,11 +15,11 @@ CREATE TABLE vehicletype (
 CREATE TABLE reservation (
     confnum INTEGER NOT NULL PRIMARY KEY,
     vtname VARCHAR(20) NOT NULL,
-    cust_dlnum INTEGER NOT NULL,
+    dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
     toDate DATE NOT NULL,
     FOREIGN KEY (vtname) REFERENCES vehicletype,
-    FOREIGN KEY (cust_dlnum) REFERENCES customer
+    FOREIGN KEY (dlnum) REFERENCES customer
 );
 
 CREATE TABLE branch (
@@ -49,13 +49,11 @@ CREATE TABLE rent (
     dlnum INTEGER NOT NULL,
     fromDate DATE NOT NULL,
     toDate DATE,
-    odometer INTEGER NOT NULL,
     cardName VARCHAR(20) NOT NULL,
     cardNo INTEGER NOT NULL,
     expDate INTEGER NOT NULL,
     confnum INTEGER,
     FOREIGN KEY (vid) REFERENCES vehicle,
-    FOREIGN KEY (dlnum) REFERENCES customer,
     FOREIGN KEY (confnum) REFERENCES reservation
 );
 
