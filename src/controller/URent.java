@@ -1,9 +1,5 @@
 package controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.sql.Date;
-
 import database.DBConnectionHandler;
 import model.ReportModel;
 import ui.DailyRentalReportUI;
@@ -12,8 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import model.Customer;
-import model.Reservation;
 import java.sql.SQLException;
 
 public class URent {
@@ -148,7 +142,7 @@ public class URent {
     public static void main(String[] args) {
         URent rent = new URent();
         if (rent.dbHandler.login()) {
-            /* Test your transactions here */
+            //launch UI
             MainPanel mp = new MainPanel(rent);
         } else {
             System.out.println("FAILURE!");
@@ -326,7 +320,7 @@ class MainPanel {
         JTextField confNumField, cardNameField, cardNoField, expDateField;
         confNumField = new JTextField("Confirmation Number");
         cardNoField = new JTextField("Credit Card Number (No Spaces)");
-        cardNameField = new JTextField("Card name (e.g. MasterCard/Visa)");
+        cardNameField = new JTextField("Card Holder Name");
         expDateField = new JTextField("Expiry Date (MMYY)");
         panelSeven.add(confNumField);
         panelSeven.add(cardNoField);
@@ -351,7 +345,7 @@ class MainPanel {
         JTextField ccNameField, ccNoField, ccExpiryField, typeField, licenseField;
         licenseField = new JTextField("Driver's License #");
         ccNoField = new JTextField("Credit Card Number (No Spaces)");
-        ccNameField = new JTextField("Card name (e.g. MasterCard/Visa)");
+        ccNameField = new JTextField("Card Holder Name");
         ccExpiryField = new JTextField("Expiry Date (MMYY)");
         typeField = new JTextField("Vehicle Type");
         panelEight.add(licenseField);
