@@ -2,6 +2,11 @@
 Car rental &amp; reservation service &amp; GUI. 
 Final project deliverable for relational databases course @UBC.
 
+### Logging In
+
+You will need to provide your UBC SQLPlus credentials in order to run database transactions.
+Provide your username and password in the `login()` located in `src/database/DBConnectionHandler.java`.
+
 In the root directory run `sqlplus` to start the sql interpreter
 
 `user-name: ora_[cwl]@stu`
